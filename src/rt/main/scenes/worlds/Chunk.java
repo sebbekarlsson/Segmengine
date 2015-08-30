@@ -1,11 +1,16 @@
 package rt.main.scenes.worlds;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+
+import javax.imageio.ImageIO;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -201,11 +206,48 @@ public class Chunk extends Actor {
 	}
 	
 	public void generate(){
-		for(int xx = 0; xx < 16; xx++){
-			for(int zz = 0; zz < 16; zz++){
-				getChunk().setBlock(xx, 0, zz, BlockType.GRASS);
+		
+		BufferedImage map_height = null;
+		BufferedImage map = null;
+		try {
+			map_height = ImageIO.read(new File("world/map/map_height.png"));
+			map = ImageIO.read(new File("world/map/map.png"));
+			
+			
+			map_height = map_height.getSubimage((int)x/16, (int)z/16, 16, 16);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		for(int x = 0; x < 16; x++){
+			for(int z = 0; z < 16; z++){
+				Color h_color = new Color(map_height.getRGB(x, z));
+				int h_r = h_color.getRed();
+				int h_g = h_color.getGreen();
+				int h_b = h_color.getBlue();
+				
+				Color m_color = new Color(map.getRGB(x, z));
+				int m_r = m_color.getRed();
+				int m_g = m_color.getGreen();
+				int m_b = m_color.getBlue();
+				
+				int height = h_r;
+				BlockType type = BlockType.AIR;
+				
+				if(m_g == 255){
+					type = BlockType.GRASS;
+				}
+				
+				blocks[x][height][z].setType(type);
+				
+				for(int i = 0; i < height; i++){
+					blocks[x][i][z].setType(BlockType.STONE);
+				}
+				
+				
 			}
 		}
+		
 		
 		this.loaded = true;
 	}

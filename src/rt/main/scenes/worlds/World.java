@@ -9,25 +9,28 @@ import rt.main.actors.Player;
 public class World extends Scene {
 
 	private Player player;
-	public Chunk[][] chunks = new Chunk[128][128];
+	public WorldGenerator worldgenerator = new WorldGenerator(this);
+	public int chunk_number = 128;
+	public Chunk[][] chunks = new Chunk[chunk_number][chunk_number];
 	public ChunkHandler chunkHandler;
 	Random random = new Random();
-
+	
 	@Override
 	public void init() {
-		generateChunks();
-		
 		backgroundColor = new Color(82,217,255);
 		getCamera().setKeyboardControlled(false);
 		getCamera().setMouseControlled(true);
 		
+		generateChunks();
+		if(worldgenerator.generate()){System.out.println("Done!");}
 		
-		
+
 		chunkHandler = new ChunkHandler(chunks);
 		chunkHandler.start();
 		
 		player = new Player(this, 0, 128, 0);
 		stageActor(player);
+		
 
 	}
 

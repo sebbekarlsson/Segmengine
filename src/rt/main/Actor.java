@@ -11,6 +11,7 @@ public abstract class Actor {
 	public Scene scene;
 	private Hitbox hitbox;
 	private boolean solid = true;
+	private boolean transparent = false;
 	public boolean draw = true;
 	protected boolean updateChunks = false;
 	
@@ -56,6 +57,14 @@ public abstract class Actor {
 	
 	public void setSolid(boolean solid){
 		this.solid = solid;
+	}
+	
+	public boolean isTransparent(){
+		return this.transparent;
+	}
+	
+	public void setTransparent(boolean transparent){
+		this.transparent = transparent;
 	}
 	
 	public float getX(){
