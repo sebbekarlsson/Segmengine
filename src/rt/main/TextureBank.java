@@ -13,6 +13,10 @@ public class TextureBank {
 	public static Texture TEST3 = loadTexture("res/test/grass.jpg", "jpg");
 	public static Texture DIRT = loadTexture("res/test/dirt.png", "png");
 	public static Texture GRASS = loadTexture("res/test/grass.png", "gif");
+	public static Texture COBBLE = loadTexture("res/test/cobble.png", "png");
+	public static Texture WORKBENCH_TOP = loadTexture("res/test/workbench_top.png", "png");
+	public static Texture WORKBENCH_SIDE = loadTexture("res/test/workbench_side.png", "png");
+	public static Texture PLANKS = loadTexture("res/test/planks.png", "png");
 	
 	public static Texture loadTexture(String path, String format){
 		Texture t = null;

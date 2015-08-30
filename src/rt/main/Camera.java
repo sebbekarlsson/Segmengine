@@ -29,7 +29,7 @@ public class Camera extends Actor {
 			slaveForKeyboard();
 		}
 		if(isMouseControlled()){
-			slaveForMouse();
+			slaveForMouse(delta);
 		}
 	}
 	
@@ -68,7 +68,7 @@ public class Camera extends Actor {
 		return this.keyboardControlled;
 	}
 	
-	private void slaveForMouse(){
+	private void slaveForMouse(int delta){
 		this.xrot -= Mouse.getDY();
 		this.yrot += Mouse.getDX();
 	}

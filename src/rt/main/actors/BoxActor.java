@@ -29,7 +29,7 @@ public abstract class BoxActor extends Actor {
 		tick(delta);
 		draw(delta);
 		updateSides();
-	}
+	}  
 	
 	public void setSize(float width, float height, float length){
 		for(int i = 0; i < sides.length; i++){

@@ -1,116 +1,111 @@
 package rt.main.actors;
 
 
-
-import java.util.ArrayList;
-
 import org.lwjgl.input.Keyboard;
 
 import rt.main.Actor;
 import rt.main.Scene;
+import rt.main.scenes.worlds.Chunk;
+
+
 
 public abstract class Entity extends Actor {
 
 	protected float dx, dy, dz = 0;
 	protected float friction = 0.0002f;
-	protected float weight = 0.0005f;
+	protected float weight = 0.0003f;
 	protected boolean onGround = false;
+
 
 	public Entity(Scene scene, float x, float y, float z) {
 		super(scene, x, y, z);
 	}
 
 	public void update(int delta){
+		updateChunk(delta);
 		updatePhysics(delta);
 		tick(delta);
 		draw(delta);
 	}
 
 	private void updatePhysics(int delta){
-		x += dx * delta;
-		y += dy * delta;
-		z += dz * delta;
-		onGround = false;
 
-		ArrayList<Actor> actors = scene.getActors();
-		System.out.println(actors.size());
-		for(int i = 0; i < actors.size(); i++){
-			Actor actor = actors.get(i);
+		dy -= (weight * delta);
+		Chunk chunk = getChunk();
 
+		if(chunk.isLoaded()){
 
-			if(actor != this){
+			float next_x = x + (dx * delta);
+			float next_y = y + (dy * delta);
+			float next_z = z + (dz * delta);
+			
+			float mod = (Block.SIZE * Chunk.HEIGHT);
+			int mod_div = Block.SIZE;
 
+			Block next_block = chunk.getBlock((int)(x%(16*16)/ 16), (int)Math.min((y%(mod)) / mod_div, Chunk.HEIGHT), (int)z%(16*16) / 16);
 
+			Block next_block_1_x1_left = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ 16, (int)(y%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / 16);
+			Block next_block_1_x1_right = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ 16, (int)(y%(mod)) / mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / 16);
+			Block next_block_1_x2_left = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)(y%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / 16);
+			Block next_block_1_x2_right = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)(y%(mod))/ mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / 16);
 
-				float speed_left = (dx) - delta;
-				float distance_left = ((x-(getHitbox().getWidth()/2)) - actor.x - actor.getHitbox().getLength());
-				float time_left = (distance_left / speed_left);
+			Block next_block_2_x1_left = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / 16);
+			Block next_block_2_x1_right = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / 16);
+			Block next_block_2_x2_left = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / 16);
+			Block next_block_2_x2_right = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / 16);
 
-				float speed_right = (dx) - delta;
-				float distance_right = (actor.x - (x+(getHitbox().getWidth()/2)));
-				float time_right = (distance_right / speed_right);
+			Block next_block_y1_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / 16, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)(z%(16*16)) / 16);
+			Block next_block_y1_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / 16, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)(z%(16*16)) / 16);
+			Block next_block_y1_up = chunk.getBlock((int)(x%(16*16)) / 16, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)((z+getHitbox().getWidth()/2)%(16*16)) / 16);
+			Block next_block_y1_down = chunk.getBlock((int)(x%(16*16)) / 16, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)((z-getHitbox().getWidth()/2)%(16*16)) / 16);
 
-				float speed_y = (dy + weight) - delta;
-				float distance_y = (y - actor.y - actor.getHitbox().getHeight());
-				float time_y = (distance_y / speed_y);
+			Block next_block_1_z1_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / 16, (int)(y%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / 16);
+			Block next_block_1_z1_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)(y%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / 16);
+			Block next_block_1_z2_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / 16, (int)(y%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / 16);
+			Block next_block_1_z2_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)(y%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / 16);
 
-				float speed_front = (dz) - delta;
-				float distance_front = ((z-(getHitbox().getLength()/2)) - actor.z - actor.getHitbox().getLength());
-				float time_front = (distance_front / speed_front);
+			Block next_block_2_z1_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / 16);
+			Block next_block_2_z1_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / 16);
+			Block next_block_2_z2_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / 16);
+			Block next_block_2_z2_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / 16);
 
-				float speed_back = (dz) - delta;
-				float distance_back = ((actor.z - (z+getHitbox().getLength()/2)));
-				float time_back = (distance_back / speed_back);
-
-				if(x+getHitbox().getX()+getHitbox().getWidth() >= actor.x && x+getHitbox().getX() <= actor.x+actor.getHitbox().getWidth() && z+getHitbox().getZ()+getHitbox().getLength() >= actor.z && z+getHitbox().getZ() <=actor.z+actor.getHitbox().getLength()){
-					if(time_y >= 0 && time_y <= 1) {
-						if(this.isSolid() && actor.isSolid()){
-							y = actor.y+actor.getHitbox().getHeight();
-							onGround = true;
-						}
-					}
-				}
-
-				if(x+getHitbox().getX()+getHitbox().getWidth() >= actor.x && x+getHitbox().getX()+getHitbox().getWidth() <= actor.x+actor.getHitbox().getWidth()+getHitbox().getWidth() && y >= actor.y && y <= actor.y+actor.getHitbox().getHeight()-0.1f){
-					if(this.isSolid() && actor.isSolid()){
-						if(time_front > 0 && time_front < 1 && z > actor.z) {
-							z = (actor.z+actor.getHitbox().getLength()) + getHitbox().getLength()/2;
-							dz = 0f;
-						}
-						if(time_back > 0 && time_back < 1 && z < actor.z){
-							z = (actor.z-(getHitbox().getLength()/2));
-							dz = 0f;
-						}
-					}
-				}
-				if(z+getHitbox().getZ()+getHitbox().getLength() >= actor.z && z+getHitbox().getZ()+getHitbox().getLength() <= actor.z+actor.getHitbox().getLength()+getHitbox().getLength() && y >= actor.y && y <= actor.y+actor.getHitbox().getHeight()-0.1f){
-					if(this.isSolid() && actor.isSolid()){
-						if(time_left > 0 && time_left < 1 && x > actor.x) {
-							x = (actor.x+actor.getHitbox().getWidth()) + getHitbox().getWidth()/2;
-							dx = 0;
-						}
-						if(time_right > 0 && time_right < 1 && x < actor.x){
-							x = (actor.x-(getHitbox().getWidth()/2));
-							dx = 0;
-						}
-					}
-				}
-
+			if(next_block.isSolid()){
+				y = next_block.y+next_block.getHitbox().getHeight();
 			}
 
-		}
-
-
-		if(!onGround){
-			dy -= weight * delta;
-		}else{
-			if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
-				dy += 0.009f * delta;
+			if(
+					!next_block_1_x1_left.isSolid() && !next_block_1_x1_right.isSolid() && !next_block_1_x2_left.isSolid() && !next_block_1_x2_right.isSolid() &&
+					!next_block_2_x1_left.isSolid() && !next_block_2_x1_right.isSolid() && !next_block_2_x2_left.isSolid() && !next_block_2_x2_right.isSolid() 
+					){
+				x += (dx * delta);
 			}else{
-				dy = 0 * delta;
+				dx = 0;
 			}
-		}
+			if(!next_block_y1_right.isSolid() && !next_block_y1_left.isSolid() && !next_block_y1_up.isSolid() && !next_block_y1_down.isSolid()){
+				y += (dy * delta);
 
+			}else{
+				if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
+					dy += 0.007f * delta;
+				}else{
+					dy = 0 * delta;
+				}
+			}
+			if(
+					!next_block_1_z1_left.isSolid() && !next_block_1_z1_right.isSolid() && !next_block_1_z2_left.isSolid() && !next_block_1_z2_right.isSolid() &&
+					!next_block_2_z1_left.isSolid() && !next_block_2_z1_right.isSolid() && !next_block_2_z2_left.isSolid() && !next_block_2_z2_right.isSolid()
+					){
+				z += (dz * delta);
+			}else{
+				dz = 0;
+			}
+
+		}else{
+			x += (dx * delta);
+			y += (dy * delta);
+			z += (dz * delta);
+		}
+		
 		if(dx > 0){
 			if(dx - friction * delta < 0){
 				dx = 0;
@@ -168,5 +163,29 @@ public abstract class Entity extends Actor {
 
 	public void setWeight(float weight){
 		this.weight = weight;
+	}
+
+	private void updateChunk(int delta){
+		if(updateChunks){
+			if(!getChunk().isInitialized()){
+				getChunk().initialize();
+			}else{
+				getChunk().update(delta);
+			}
+			if(!getChunk().isLoaded()){
+				if(!getChunk().chunkFileExists()){
+
+					getChunk().setAir();
+					getChunk().generate();
+					getChunk().save();
+
+				}else{
+					getChunk().load();
+				}
+			}
+
+
+
+		}
 	}
 }

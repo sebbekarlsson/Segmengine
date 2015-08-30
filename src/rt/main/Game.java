@@ -5,12 +5,13 @@ import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
-import rt.main.scenes.World;
+import rt.main.scenes.worlds.World;
 
 public class Game {
 	
@@ -34,7 +35,7 @@ public class Game {
 	
 	public Game() throws LWJGLException{
 		Display.setTitle("RoofTop Game");
-		setDisplayMode(DISPLAY_SIZE.width, DISPLAY_SIZE.height, true);
+		setDisplayMode(DISPLAY_SIZE.width/2, DISPLAY_SIZE.height/2, true);
 		Display.create();
 		
 		setScenes(new Scene[]{
@@ -52,8 +53,6 @@ public class Game {
 			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT);
 			GL11.glClearColor((float)scene.backgroundColor.getRed()/255, (float)scene.backgroundColor.getGreen()/255, (float)scene.backgroundColor.getBlue()/255, 1f);
 			GL11.glColor3f(1f, 1f, 1f);
-			
-			
 			
 			
 			if(!scene.isInitialized()){
@@ -74,6 +73,10 @@ public class Game {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			Display.sync(60);
 			Display.update();
+			
+			if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+				System.exit(0);
+			}
 		}
 		
 		System.exit(0);
@@ -82,7 +85,7 @@ public class Game {
 	private void init_graphics(){
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-        GLU.gluPerspective(92f, (float)Display.getWidth()/Display.getHeight(), 1, 1000);
+        GLU.gluPerspective(92f, (float)Display.getWidth()/Display.getHeight(), 0.01f, 1000);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glLoadIdentity();
         GL11.glEnable(GL11.GL_DEPTH_TEST);

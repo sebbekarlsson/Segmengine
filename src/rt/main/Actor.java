@@ -1,6 +1,8 @@
 package rt.main;
 
 import rt.main.physics.Hitbox;
+import rt.main.scenes.worlds.Chunk;
+import rt.main.scenes.worlds.World;
 
 public abstract class Actor {
 	
@@ -9,6 +11,8 @@ public abstract class Actor {
 	public Scene scene;
 	private Hitbox hitbox;
 	private boolean solid = true;
+	public boolean draw = true;
+	protected boolean updateChunks = false;
 	
 	public Actor(Scene scene, float x, float y, float z){
 		this.scene = scene;
@@ -20,6 +24,7 @@ public abstract class Actor {
 	
 	public void update(int delta){
 		tick(delta);
+		if(draw)
 		draw(delta);
 	}
 	
@@ -51,5 +56,26 @@ public abstract class Actor {
 	
 	public void setSolid(boolean solid){
 		this.solid = solid;
+	}
+	
+	public float getX(){
+		return this.x;
+	}
+	
+	public float getY(){
+		return this.y;
+	}
+	
+	public float getZ(){
+		return this.z;
+	}
+	
+	public Chunk getChunk(){
+		Chunk[][] chunks = ((World) scene).chunks;
+		return chunks[((int)(this.x/(16*16)))][((int)(this.z/(16*16)))];
+	}
+	
+	public boolean updatesChunks(){
+		return this.updateChunks;
 	}
 }
