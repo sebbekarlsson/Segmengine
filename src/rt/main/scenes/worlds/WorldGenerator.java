@@ -20,28 +20,40 @@ public class WorldGenerator{
 
 	public boolean generate() {
 		BufferedImage map_height = new BufferedImage(Chunk.WIDTH * world.chunk_number, Chunk.WIDTH * world.chunk_number, BufferedImage.TYPE_INT_RGB);
+		int normal_height = 16;
+		// - SET BASE HEIGHT - //
+		for(int x = 0; x < map_height.getWidth(); x++){
+			for(int z = 0; z < map_height.getHeight(); z++){
+				int r = 0;
+				int g = 0;
+				int b = 0;
+
+				Color color = new Color(normal_height, g ,b);
+				map_height.setRGB(x, z, color.getRGB());
+
+			}
+		}
+
 
 		for(int x = 0; x < map_height.getWidth(); x++){
 			for(int z = 0; z < map_height.getHeight(); z++){
 				int r = 0;
 				int g = 0;
 				int b = 0;
-				int normal_height = 16;
-				
+
 				Color color = new Color(normal_height, g ,b);
-				map_height.setRGB(x, z, color.getRGB());
-				
+
 				// - MOUNTAINS - //
 				if(random.nextInt(60) == 0){
 					int mountainSize = random.nextInt(10);
 					for(int xx = -mountainSize; xx < mountainSize; xx++){
 						for(int yy = -mountainSize; yy < mountainSize; yy++){
 							if(x+xx > 0 && x+xx < map_height.getWidth() && z+yy > 0 && z+yy < map_height.getHeight()){
-								
-								float distance = (float) Math.sqrt((x-x+xx)*(x-x+xx) + (z-z+yy)*(z-z+yy));
-								if(distance < mountainSize && distance > 0){
+
+								float distance = (float) Math.sqrt(((x+xx) - x)*((x+xx) - x) + ((z+yy) - z)*((z+yy) - z));
+								if(distance <= mountainSize && distance >= 0){
 									int height = normal_height + (int)((mountainSize) - distance);
-									
+
 									color = new Color(height, g ,b);
 									map_height.setRGB(x+xx, z+yy, color.getRGB());
 								}
@@ -49,19 +61,23 @@ public class WorldGenerator{
 						}
 					}
 				}
-				
+
 				// - SLOPES - //
 				if(random.nextInt(60) == 0){
-					int slopeSize = random.nextInt(10);
-					for(int xx = -slopeSize; xx < slopeSize; xx++){
-						for(int yy = -slopeSize; yy < slopeSize; yy++){
+					int rough = 1;
+					if(random.nextInt(3) == 0){
+						rough = random.nextInt(4)+1;
+					}
+					
+					int mountainSize = random.nextInt(10);
+					for(int xx = -mountainSize; xx < mountainSize; xx++){
+						for(int yy = -mountainSize; yy < mountainSize; yy++){
 							if(x+xx > 0 && x+xx < map_height.getWidth() && z+yy > 0 && z+yy < map_height.getHeight()){
-								
-								float distance = (float) Math.sqrt((x-x+xx)*(x-x+xx) + (z-z+yy)*(z-z+yy));
-								if(distance < slopeSize && distance > 0){
-									int height = normal_height - (int)((slopeSize) - distance);
-									
-									color = new Color(height, g ,b);
+
+								float distance = (float) Math.sqrt(((x+xx) - x)*((x+xx) - x) + ((z+yy) - z)*((z+yy) - z));
+								if(distance <= mountainSize && distance >= 0){
+									int height = (normal_height / rough) - (int)((mountainSize) - distance);
+									color = new Color(Math.max(0, height), g ,b);
 									map_height.setRGB(x+xx, z+yy, color.getRGB());
 								}
 							}

@@ -29,7 +29,7 @@ public class Chunk extends Actor {
 	Random random = new Random();
 	
 	public static int WIDTH = 16;
-	public static int HEIGHT = 32;
+	public static int HEIGHT = 64;
 
 	public Chunk(Scene scene, float x, float y, float z) {
 		super(scene, x, y, z);
