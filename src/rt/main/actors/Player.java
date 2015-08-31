@@ -4,9 +4,11 @@ import java.awt.Color;
 import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import rt.main.Actor;
 import rt.main.Scene;
+import rt.main.scenes.worlds.World;
 import rt.main.types.BlockType;
 
 
@@ -33,6 +35,11 @@ public class Player extends Entity {
 				if(Keyboard.getEventKey() == Keyboard.KEY_R){
 					y = 120;
 				}
+			}
+		}
+		while(Mouse.next()){
+			if (Mouse.getEventButtonState()){
+				((World) scene).placeBlock(BlockType.COBBLE);
 			}
 		}
 	}

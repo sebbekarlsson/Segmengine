@@ -19,11 +19,11 @@ public class ChunkHandler implements Runnable {
 			for(int x = 0; x < chunks.length; x++){
 				for(int z = 0; z < chunks[x].length; z++){
 					Chunk chunk = chunks[x][z];
-
 					if(chunk.isLoaded()){
 						if(!chunk.hasChunkLoader() && !chunk.hasPlayer()){
 							chunk.unload();
-							
+							chunk.kill();
+							System.out.println("unload");
 							System.gc();
 						}
 					}

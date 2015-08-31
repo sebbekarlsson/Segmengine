@@ -1,11 +1,14 @@
 package rt.main.actors;
 
 
+import java.awt.Color;
+
 import org.lwjgl.input.Keyboard;
 
 import rt.main.Actor;
 import rt.main.Scene;
 import rt.main.scenes.worlds.Chunk;
+import rt.main.scenes.worlds.World;
 
 
 
@@ -38,7 +41,7 @@ public abstract class Entity extends Actor {
 			float next_x = x + (dx * delta);
 			float next_y = y + (dy * delta);
 			float next_z = z + (dz * delta);
-			
+
 			float mod = (Block.SIZE * Chunk.HEIGHT);
 			int mod_div = Block.SIZE;
 
@@ -105,7 +108,7 @@ public abstract class Entity extends Actor {
 			y += (dy * delta);
 			z += (dz * delta);
 		}
-		
+
 		if(dx > 0){
 			if(dx - friction * delta < 0){
 				dx = 0;
@@ -167,6 +170,42 @@ public abstract class Entity extends Actor {
 
 	private void updateChunk(int delta){
 		if(updateChunks){
+
+			/*for(int xx = 0; x < ((World) scene).chunks.length; xx++){
+				for(int zz = 0; zz < ((World) scene).chunks[xx].length; zz++){
+					Chunk chunk = ((World) scene).chunks[xx][zz];
+					if(chunk != null){
+						float distance = (float) Math.sqrt((((chunk.x+this.x) - chunk.x)*
+								((chunk.x+this.x) - chunk.x) + ((chunk.z+this.z) - chunk.z) - z)*
+								(chunk.z+this.z) - this.z);
+
+						if(distance <= 16){
+
+							if(!chunk.isInitialized()){
+								chunk.initialize();
+							}else{
+								chunk.update(delta);
+							}
+							if(!chunk.isLoaded()){
+								if(!chunk.chunkFileExists()){
+
+									chunk.setAir();
+									chunk.generate();
+									chunk.save();
+
+								}else{
+									chunk.load();
+								}
+							}
+						}
+					}
+				}
+			}*/
+
+
+			/*if(((World) scene).chunks[1][1].isInitialized()){
+				((World) scene).chunks[1][1].update(delta);
+			}*/
 			if(!getChunk().isInitialized()){
 				getChunk().initialize();
 			}else{
@@ -174,7 +213,6 @@ public abstract class Entity extends Actor {
 			}
 			if(!getChunk().isLoaded()){
 				if(!getChunk().chunkFileExists()){
-
 					getChunk().setAir();
 					getChunk().generate();
 					getChunk().save();
@@ -183,8 +221,6 @@ public abstract class Entity extends Actor {
 					getChunk().load();
 				}
 			}
-
-
 
 		}
 	}

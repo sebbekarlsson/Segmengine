@@ -26,6 +26,7 @@ public class Chunk extends Actor {
 	public ArrayList<Actor> actors = new ArrayList<Actor>();
 	public Block[][][] blocks = null;
 	private boolean loaded = false;
+	private boolean alive = false;
 	Random random = new Random();
 	
 	public static int WIDTH = 16;
@@ -40,6 +41,7 @@ public class Chunk extends Actor {
 	}
 
 	public void update(int delta){
+		alive = true;
 		tick(delta);
 		draw(delta);
 
@@ -199,7 +201,6 @@ public class Chunk extends Actor {
 	}
 	
 	public void unload(){
-		System.out.println("unloaded");
 		save();
 		forgetBlocks();
 		this.loaded = false;
@@ -239,6 +240,33 @@ public class Chunk extends Actor {
 				}
 				
 				blocks[x][height][z].setType(type);
+				
+				// - TREE - //
+				if(random.nextInt(60) == 0){
+					int tree_height = 6;
+					for(int i = 1; i < tree_height; i++){
+						blocks[x][height+i][z].setType(BlockType.LOG);
+					}
+					blocks[x][height+(tree_height)][z].setType(BlockType.LEAF);
+					
+					int leafsize = 2 + random.nextInt(1);
+					int h = height+(tree_height-leafsize);
+					for(int xx = -leafsize; xx < leafsize; xx++){
+						for(int yy = -leafsize; yy < leafsize; yy++){
+							if(x+xx > 0 && x+xx < map_height.getWidth() && z+yy > 0 && z+yy < map_height.getHeight()){
+
+								float distance = (float) Math.sqrt(((x+xx) - x)*((x+xx) - x) + ((z+yy) - z)*((z+yy) - z));
+								if(distance < leafsize && distance > 0){
+									
+									int height_ = h + (int)((leafsize) - distance);
+									if(x+xx > 0 && x+xx < ((World)scene).chunk_number && z+yy > 0 && z+yy < ((World)scene).chunk_number)
+									blocks[x+xx][height_][z+yy].setType(BlockType.LEAF);
+								}
+							}
+						}
+					}
+					
+				}
 				
 				for(int i = 0; i < height; i++){
 					blocks[x][i][z].setType(BlockType.STONE);
@@ -284,5 +312,13 @@ public class Chunk extends Actor {
 			loaders.add(((World) scene).getPlayer());
 		}
 		return loaders;
+	}
+	
+	public boolean isAlive(){
+		return this.alive;
+	}
+	
+	public void kill(){
+		this.alive = false;
 	}
 }

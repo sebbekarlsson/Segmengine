@@ -21,6 +21,7 @@ public class TextureBank {
 	public static Texture LOG = loadTexture("res/test/log.png", "png");
 	public static Texture LOG_TOP = loadTexture("res/test/log_top.png", "png");
 	public static Texture STONE = loadTexture("res/test/stone.png", "png");
+	public static Texture LEAF = loadTexture("res/test/leaf.png", "png");
 	
 	public static Texture loadTexture(String path, String format){
 		Texture t = null;

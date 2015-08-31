@@ -14,8 +14,9 @@ public enum BlockType {
 	WORKBENCH(TextureBank.WORKBENCH_SIDE, TextureBank.WORKBENCH_SIDE, TextureBank.WORKBENCH_SIDE, TextureBank.WORKBENCH_SIDE, TextureBank.WORKBENCH_TOP, TextureBank.PLANKS, true, false),
 	GLASS(TextureBank.GLASS, TextureBank.GLASS, TextureBank.GLASS, TextureBank.GLASS, TextureBank.GLASS, TextureBank.GLASS, true, true),
 	LOG(TextureBank.LOG, TextureBank.LOG, TextureBank.LOG, TextureBank.LOG, TextureBank.LOG_TOP, TextureBank.LOG_TOP, true, false),
-	STONE(TextureBank.STONE, TextureBank.STONE, TextureBank.STONE, TextureBank.STONE, TextureBank.STONE, TextureBank.STONE, true, false);
-
+	STONE(TextureBank.STONE, TextureBank.STONE, TextureBank.STONE, TextureBank.STONE, TextureBank.STONE, TextureBank.STONE, true, false),
+	LEAF(TextureBank.LEAF, TextureBank.LEAF, TextureBank.LEAF, TextureBank.LEAF, TextureBank.LEAF, TextureBank.LEAF, true, true);
+	
 	public Texture texture_left;
 	public Texture texture_right;
 	public Texture texture_front;

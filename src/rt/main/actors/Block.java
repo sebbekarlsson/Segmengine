@@ -1,13 +1,16 @@
 package rt.main.actors;
 
 import rt.main.Actor;
+import rt.main.Camera;
 import rt.main.Scene;
 import rt.main.scenes.worlds.Chunk;
+import rt.main.scenes.worlds.Ray;
 import rt.main.types.BlockType;
 
 public class Block extends BoxActor {
 
 	private BlockType blocktype;
+	public Ray ray;
 	public static int SIZE = 16;
 
 	public Block(Scene scene, float x, float y, float z, BlockType blocktype) {
@@ -29,6 +32,13 @@ public class Block extends BoxActor {
 		Chunk chunk = getChunk();
 
 		if(chunk.isLoaded()){
+			
+			Camera camera = scene.getCamera();
+			if(camera.frustum.cubeInFrustum(x+SIZE, y+SIZE, z+SIZE/2, x, y, z)){
+				draw = true;
+			}else{ 
+				draw = false;
+			}
 
 			float mod = (Block.SIZE * Chunk.HEIGHT);
 			int mod_div = Block.SIZE;
@@ -113,5 +123,14 @@ public class Block extends BoxActor {
 	public float getSize(){
 		return SIZE;
 	}
-
+	
+	public Block intersectsWithRay(Ray ray){
+		 if(ray.x >= this.x && ray.x <= this.x+SIZE && ray.z >= this.z && ray.z <= this.z+SIZE && ray.y >= this.y && ray.y <= this.y+SIZE){
+			 this.ray = ray;
+			 return this;
+		 }
+		 
+		 return null;
+	}
+	
 }

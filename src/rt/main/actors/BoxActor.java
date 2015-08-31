@@ -7,11 +7,11 @@ import rt.main.Actor;
 import rt.main.Scene;
 
 public abstract class BoxActor extends Actor {
-	
+
 	private float width = 16;
 	private float height = 16;
 	private float length = 16;
-	
+
 	public BoxSide[] sides = new BoxSide[]{
 			new BoxSide(this, "left"),
 			new BoxSide(this, "right"),
@@ -24,13 +24,15 @@ public abstract class BoxActor extends Actor {
 	public BoxActor(Scene scene, float x, float y, float z) {
 		super(scene, x, y, z);
 	}
-	
+
 	public void update(int delta){
 		tick(delta);
-		draw(delta);
-		updateSides();
+		if(draw){
+			draw(delta);
+			updateSides();
+		}
 	}  
-	
+
 	public void setSize(float width, float height, float length){
 		for(int i = 0; i < sides.length; i++){
 			sides[i].width = width;
@@ -44,21 +46,21 @@ public abstract class BoxActor extends Actor {
 		getHitbox().setWidth(width);
 		getHitbox().setLength(length);
 	}
-	
+
 	public float getWidth(){
 		return this.width;
 	}
-	
+
 	public float getHeight(){
 		return this.height;
 	}
-	
+
 	public float getLength(){
 		return this.length;
 	}
-	
+
 	private void updateSides(){
-		
+
 		GL11.glPushMatrix();
 		GL11.glTranslatef(x, y, z);
 		for(int i = 0; i < sides.length; i++){
@@ -66,14 +68,14 @@ public abstract class BoxActor extends Actor {
 		}
 		GL11.glPopMatrix();
 	}
-	
+
 	public BoxSide getSide(String type){
 		for(int i = 0; i < sides.length; i++){
 			if(sides[i].type.equals(type)){
 				return sides[i];
 			}
 		}
-		
+
 		return null;
 	}
 
