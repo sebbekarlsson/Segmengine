@@ -28,7 +28,6 @@ public class Chunk extends Actor {
 	private boolean loaded = false;
 	private boolean alive = false;
 	Random random = new Random();
-	
 	public static int WIDTH = 16;
 	public static int HEIGHT = 64;
 
@@ -77,13 +76,23 @@ public class Chunk extends Actor {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public void tickle(){
+		for(int xx = 0; xx < blocks.length; xx++){
+			for(int yy = 0; yy < blocks[xx].length; yy++){
+				for(int zz = 0; zz < blocks[xx][yy].length; zz++){
+					blocks[xx][yy][zz].tickle();
+				}
+			}
+		}
+	}
 
 	public Block setBlock(int x, int y, int z, BlockType type){
 
 		if(blocks[x][y][z] == null){
 			Block block = new Block(scene, this.x+(x * (16)), (y * 16), this.z+(z * (16)), type);
 			blocks[x][y][z] = block;
-			stageActor(block);
+			stageActor(block.tickle());
 
 		}else{
 			blocks[x][y][z].setType(type);
@@ -275,7 +284,6 @@ public class Chunk extends Actor {
 				
 			}
 		}
-		
 		
 		this.loaded = true;
 	}

@@ -42,13 +42,14 @@ public class Game {
 				new World()
 		});
 		
-		init_graphics();
 		getDelta();
 		lastFPS = getTime();
 		while(!Display.isCloseRequested()){
 			int delta = getDelta();
 			Scene scene = getCurrentScene();
 			Camera camera = scene.getCamera();
+	        
+			make3D();
 			
 			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT);
 			GL11.glClearColor((float)scene.backgroundColor.getRed()/255, (float)scene.backgroundColor.getGreen()/255, (float)scene.backgroundColor.getBlue()/255, 1f);
@@ -58,6 +59,7 @@ public class Game {
 			if(!scene.isInitialized()){
 				scene.initialize();
 			}
+			
 			
 			GL11.glPushMatrix();
 			
@@ -70,7 +72,7 @@ public class Game {
 			
 			GL11.glPopMatrix();
 			
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			
 			Display.sync(60);
 			Display.update();
 			
@@ -82,18 +84,31 @@ public class Game {
 		System.exit(0);
 	}
 	
-	private void init_graphics(){
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
+	protected static void make2D() {
+        //Remove the Z axis
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glPushMatrix();
+        GL11.glLoadIdentity();
+        GL11.glOrtho(0, Display.getWidth(), 0, Display.getHeight(), -1, 1);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        GL11.glPushMatrix();
+        GL11.glLoadIdentity();
+    }
+ 
+    protected static void make3D() {
+        //Restore the Z axis
+    	GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
         GLU.gluPerspective(92f, (float)Display.getWidth()/Display.getHeight(), 1f, 1000);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glLoadIdentity();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_BLEND);
-        /*GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);*/
-
-	}
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
+    }
 	
 	/**
 	 * Set the display mode to be used 

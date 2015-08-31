@@ -2,6 +2,7 @@ package rt.main;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.util.vector.Vector3f;
 
 import rt.main.actors.Block;
 import rt.main.physics.Frustum;
@@ -50,7 +51,9 @@ public class Camera extends Actor {
 
 	@Override
 	public void tick(int delta) {
-
+		/*Block facing_block = getFacingBlock();
+		if(facing_block != null)
+		facing_block.getHitbox().setDraw(true);*/
 	}
 
 	public float getYaw(){
@@ -112,11 +115,11 @@ public class Camera extends Actor {
 
 	public Block getFacingBlock(){
 		Ray ray = new Ray(this.scene, x, y, z);
-
-		for(int range = 0; range < 6; range++){
-			ray.x += Block.SIZE * (float) Math.sin(Math.toRadians(getYaw()));
-			ray.z -= Block.SIZE * (float) Math.cos(Math.toRadians(getYaw()));
-			ray.y -= Block.SIZE * (float) Math.tan(Math.toRadians(getPitch()));
+		
+		for(int range = 0; range < 6*16; range++){
+			ray.x += (float) Math.sin(Math.toRadians(getYaw()));
+			ray.z -= (float) Math.cos(Math.toRadians(getYaw()));
+			ray.y -= (float) Math.tan(Math.toRadians(getPitch()));
 			Chunk chunk = ray.getChunk();
 			if(chunk.isLoaded()){
 				Block[][][] blocks = chunk.blocks;
@@ -127,7 +130,7 @@ public class Camera extends Actor {
 				int _y = (int)(ray.y%(mod) / mod_div);
 				int _z = (int)ray.z%(16*16)/ 16;
 
-				if(_x > 0 && _x < ((World)scene).chunk_number*16 && _z >= 0 && _z < ((World)scene).chunk_number*16 && _y >= 0 && y < ((World)scene).chunk_number*16 ){
+				if(_x >= 0 && _x <= ((World)scene).chunk_number*16 && _z >= 0 && _z <= ((World)scene).chunk_number*16 && _y >= 0 && _y <= ((World)scene).chunk_number*16 ){
 
 					Block block = blocks[_x][_y][_z];
 					if(!block.getType().equals(BlockType.AIR)){
@@ -141,5 +144,48 @@ public class Camera extends Actor {
 		return null;
 	}
 
+	public void placeBlock(BlockType type){
+		Block block = getFacingBlock();
+		if(block != null){
+			if(block.ray != null){
+				Vector3f b_v = new Vector3f(block.x, block.y, block.z);
+				Vector3f hit = new Vector3f(block.ray.x, block.ray.y, block.ray.z);
 
-}
+
+				float angle =Vector3f.angle(b_v, hit);
+
+
+				float placex = block.ray.getX();
+				float placey = block.ray.getY();
+				float placez = block.ray.getZ();
+				
+				//ray.x += (float) Math.sin(Math.toRadians(getYaw()));
+				//ray.y -= (float) Math.tan(Math.toRadians(getPitch()));
+				//ray.z -= (float) Math.cos(Math.toRadians(getYaw()));
+				
+
+				placex -= Math.cos(angle)*16;
+				placey -= Math.tan(angle)*16;
+				placez += Math.sin(angle)*16;
+
+
+
+				//top
+				//if (angle >= 180 && angle <= 0)
+				/*int placex = (int)((b_v.x%(16*16))/16);
+				int placey = (int)(((b_v.y+1)%(16*256))/16);
+				int placez = (int)((b_v.z%(16*16))/16);*/
+
+				if(block.ray.getChunk().getBlock((int)(placex%(16*16) / 16), (int)(placey%(16*256) / 16), (int)(placez%(16*16) / 16)).getType().equals(BlockType.AIR)){
+					block.ray.getChunk().setBlock((int)(placex%(16*16) / 16), (int)(placey%(16*256) / 16), (int)(placez%(16*16) / 16), BlockType.COBBLE);
+				}
+
+
+
+				}
+			}
+		}
+
+
+
+	}

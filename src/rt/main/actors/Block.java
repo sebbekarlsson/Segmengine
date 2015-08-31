@@ -21,10 +21,59 @@ public class Block extends BoxActor {
 	@Override
 	public void init() {
 		setType(this.blocktype);
+		
 	}
 
 	@Override
 	public void tick(int delta) {
+		Camera camera = scene.getCamera();
+		if(camera.frustum.cubeInFrustum(x+SIZE, y+SIZE, z+SIZE/2, x, y, z)){
+			draw = true;
+		}else{ 
+			draw = false;
+		}
+
+		
+	}
+
+	@Override
+	public void draw(int delta) {
+
+	}
+
+	@Override
+	public void preparedCollision(Actor actor, float timex, float timey,
+			float timez) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public BlockType getType(){
+		return this.blocktype;
+	}
+
+	public Block setType(BlockType blocktype){
+		this.blocktype = blocktype;
+		this.setSize(SIZE, SIZE, SIZE);
+		this.getHitbox().setWidth(SIZE);
+		this.getHitbox().setHeight(SIZE);
+		this.getHitbox().setLength(SIZE);
+		this.setSolid(blocktype.solid);
+		this.setTransparent(blocktype.transparent);
+		this.getSide("left").texture = blocktype.texture_left;
+		this.getSide("right").texture = blocktype.texture_right;
+		this.getSide("top").texture = blocktype.texture_top;
+		this.getSide("bottom").texture = blocktype.texture_bottom;
+		this.getSide("back").texture = blocktype.texture_back;
+		this.getSide("front").texture = blocktype.texture_front;
+
+		tickle();
+		
+		return this;
+	}
+	
+	public Block tickle(){
+
 		for(int i = 0; i < this.sides.length; i++){
 			this.sides[i].draw = true;
 		}
@@ -33,13 +82,6 @@ public class Block extends BoxActor {
 
 		if(chunk.isLoaded()){
 			
-			Camera camera = scene.getCamera();
-			if(camera.frustum.cubeInFrustum(x+SIZE, y+SIZE, z+SIZE/2, x, y, z)){
-				draw = true;
-			}else{ 
-				draw = false;
-			}
-
 			float mod = (Block.SIZE * Chunk.HEIGHT);
 			int mod_div = Block.SIZE;
 			
@@ -75,42 +117,8 @@ public class Block extends BoxActor {
 			}
 		}
 
-
-	}
-
-	@Override
-	public void draw(int delta) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void preparedCollision(Actor actor, float timex, float timey,
-			float timez) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public BlockType getType(){
-		return this.blocktype;
-	}
-
-	public Block setType(BlockType blocktype){
-		this.blocktype = blocktype;
-		this.setSize(SIZE, SIZE, SIZE);
-		this.getHitbox().setWidth(SIZE);
-		this.getHitbox().setHeight(SIZE);
-		this.getHitbox().setLength(SIZE);
-		this.setSolid(blocktype.solid);
-		this.setTransparent(blocktype.transparent);
-		this.getSide("left").texture = blocktype.texture_left;
-		this.getSide("right").texture = blocktype.texture_right;
-		this.getSide("top").texture = blocktype.texture_top;
-		this.getSide("bottom").texture = blocktype.texture_bottom;
-		this.getSide("back").texture = blocktype.texture_back;
-		this.getSide("front").texture = blocktype.texture_front;
-
 		return this;
+
 	}
 
 	public Block setSize(int size){
@@ -125,7 +133,7 @@ public class Block extends BoxActor {
 	}
 	
 	public Block intersectsWithRay(Ray ray){
-		 if(ray.x >= this.x && ray.x <= this.x+SIZE && ray.z >= this.z && ray.z <= this.z+SIZE && ray.y >= this.y && ray.y <= this.y+SIZE){
+		 if(ray.x >= this.x-(SIZE/2) && ray.x <= this.x+(SIZE*2) && ray.z >= this.z-(SIZE/2) && ray.z <= this.z+(SIZE*2) && ray.y >= this.y-(SIZE/2) && ray.y <= this.y+(SIZE*2)){
 			 this.ray = ray;
 			 return this;
 		 }

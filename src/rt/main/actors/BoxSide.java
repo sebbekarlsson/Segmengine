@@ -14,7 +14,7 @@ public class BoxSide{
 	public float length = 4;
 	public float textureRepeat = 1;
 	public Texture texture;
-	public boolean draw;
+	public boolean draw = true;
 
 	public BoxSide(BoxActor boxactor, String type) {
 		this.boxactor = boxactor;

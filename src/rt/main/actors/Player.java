@@ -39,7 +39,7 @@ public class Player extends Entity {
 		}
 		while(Mouse.next()){
 			if (Mouse.getEventButtonState()){
-				((World) scene).placeBlock(BlockType.COBBLE);
+				((World) scene).getCamera().placeBlock(BlockType.COBBLE);
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 package rt.main.actors;
 
 
-import java.awt.Color;
+
 
 import org.lwjgl.input.Keyboard;
 
@@ -18,6 +18,7 @@ public abstract class Entity extends Actor {
 	protected float friction = 0.0002f;
 	protected float weight = 0.0003f;
 	protected boolean onGround = false;
+	protected Chunk old_chunk = null;
 
 
 	public Entity(Scene scene, float x, float y, float z) {
@@ -25,7 +26,9 @@ public abstract class Entity extends Actor {
 	}
 
 	public void update(int delta){
-		updateChunk(delta);
+		if(this.updatesChunks()){
+			updateChunks(delta);
+		}
 		updatePhysics(delta);
 		tick(delta);
 		draw(delta);
@@ -138,6 +141,10 @@ public abstract class Entity extends Actor {
 			}
 		}
 
+		if(old_chunk != getChunk()){
+			onChunkLeave(old_chunk);
+		}
+		old_chunk = getChunk();
 	}
 
 	public float getDx(){
@@ -168,60 +175,42 @@ public abstract class Entity extends Actor {
 		this.weight = weight;
 	}
 
-	private void updateChunk(int delta){
-		if(updateChunks){
+	private void initialChunkUpdate(Chunk chunk, int delta){
 
-			/*for(int xx = 0; x < ((World) scene).chunks.length; xx++){
-				for(int zz = 0; zz < ((World) scene).chunks[xx].length; zz++){
-					Chunk chunk = ((World) scene).chunks[xx][zz];
-					if(chunk != null){
-						float distance = (float) Math.sqrt((((chunk.x+this.x) - chunk.x)*
-								((chunk.x+this.x) - chunk.x) + ((chunk.z+this.z) - chunk.z) - z)*
-								(chunk.z+this.z) - this.z);
+		if(!chunk.isInitialized()){
+			chunk.initialize();
+		}else{
+			chunk.update(delta);
+		}
+		if(!chunk.isLoaded()){
+			if(!chunk.chunkFileExists()){
+				chunk.setAir();
+				chunk.generate();
+				chunk.save();
 
-						if(distance <= 16){
-
-							if(!chunk.isInitialized()){
-								chunk.initialize();
-							}else{
-								chunk.update(delta);
-							}
-							if(!chunk.isLoaded()){
-								if(!chunk.chunkFileExists()){
-
-									chunk.setAir();
-									chunk.generate();
-									chunk.save();
-
-								}else{
-									chunk.load();
-								}
-							}
-						}
-					}
-				}
-			}*/
-
-
-			/*if(((World) scene).chunks[1][1].isInitialized()){
-				((World) scene).chunks[1][1].update(delta);
-			}*/
-			if(!getChunk().isInitialized()){
-				getChunk().initialize();
 			}else{
-				getChunk().update(delta);
+				chunk.load();
+				chunk.tickle();
 			}
-			if(!getChunk().isLoaded()){
-				if(!getChunk().chunkFileExists()){
-					getChunk().setAir();
-					getChunk().generate();
-					getChunk().save();
+		}
 
-				}else{
-					getChunk().load();
-				}
+
+	}
+	
+	public void updateChunks(int delta){
+		World world = ((World) scene);
+		
+		initialChunkUpdate(getChunk(), delta);
+		initialChunkUpdate(world.getChunk(0, 1), delta);
+	}
+
+	private void onChunkLeave(Chunk chunk){
+		if(this.updatesChunks()){
+			if(chunk != null){
+				chunk.unload();
+				chunk.kill();
+				System.gc();
 			}
-
 		}
 	}
 }
