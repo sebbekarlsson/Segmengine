@@ -20,6 +20,7 @@ import rt.main.Actor;
 import rt.main.Scene;
 import rt.main.actors.Block;
 import rt.main.types.BlockType;
+import rt.main.utils.Smart;
 
 public class Chunk extends Actor {
 
@@ -76,23 +77,13 @@ public class Chunk extends Actor {
 		// TODO Auto-generated method stub
 
 	}
-	
-	public void tickle(){
-		for(int xx = 0; xx < blocks.length; xx++){
-			for(int yy = 0; yy < blocks[xx].length; yy++){
-				for(int zz = 0; zz < blocks[xx][yy].length; zz++){
-					blocks[xx][yy][zz].tickle();
-				}
-			}
-		}
-	}
 
 	public Block setBlock(int x, int y, int z, BlockType type){
 
 		if(blocks[x][y][z] == null){
 			Block block = new Block(scene, this.x+(x * (Block.SIZE)), (y * Block.SIZE), this.z+(z * (Block.SIZE)), type);
 			blocks[x][y][z] = block;
-			stageActor(block.tickle());
+			stageActor(block);
 
 		}else{
 			blocks[x][y][z].setType(type);
@@ -180,7 +171,7 @@ public class Chunk extends Actor {
 		for(int i = 0; i < block_array.size(); i++){
 			JSONObject block =(JSONObject)block_array.get(i);
 			Block b = new Block(scene, Float.parseFloat(block.get("x").toString()), Float.parseFloat(block.get("y").toString()), Float.parseFloat(block.get("z").toString()), BlockType.valueOf(block.get("type").toString()));
-			setBlock((int)(b.x%(16*16)) / Block.SIZE, (int)(b.y%(16*256)) / Block.SIZE, (int)(b.z%(16*16)) / Block.SIZE, b.getType());
+			setBlock((int)(b.x%(16)) / Block.SIZE, (int)(b.y%(256)) / Block.SIZE, (int)(b.z%(16)) / Block.SIZE, b.getType());
 		}
 		
 		this.loaded = true;
@@ -210,6 +201,7 @@ public class Chunk extends Actor {
 	}
 	
 	public void unload(){
+		System.out.println("unload");
 		save();
 		forgetBlocks();
 		this.loaded = false;
@@ -223,8 +215,8 @@ public class Chunk extends Actor {
 			map_height = ImageIO.read(new File("world/map/map_height.png"));
 			map = ImageIO.read(new File("world/map/map.png"));
 			
-			
-			map_height = map_height.getSubimage((int)x/16, (int)z/16, 16, 16);
+			map_height = map_height.getSubimage(Smart.mod(x, map_height.getWidth()), Smart.mod(z, map_height.getHeight()), 16, 16);
+			map = map.getSubimage(Smart.mod(x, map.getWidth()), Smart.mod(z, map.getHeight()), 16, 16);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -247,11 +239,14 @@ public class Chunk extends Actor {
 				if(m_g == 255){
 					type = BlockType.GRASS;
 				}
+				else if(m_r == 255){
+					type = BlockType.SAND;
+				}
 				
 				blocks[x][height][z].setType(type);
 				
 				// - TREE - //
-				if(random.nextInt(60) == 0){
+				if(random.nextInt(60) == 0 && m_r != 255){
 					int tree_height = 6;
 					for(int i = 1; i < tree_height; i++){
 						blocks[x][height+i][z].setType(BlockType.LOG);

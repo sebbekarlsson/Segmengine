@@ -1,14 +1,13 @@
 package rt.main.actors;
 
 
-import java.awt.Color;
 
 import org.lwjgl.input.Keyboard;
 
 import rt.main.Actor;
 import rt.main.Scene;
 import rt.main.scenes.worlds.Chunk;
-import rt.main.scenes.worlds.World;
+import rt.main.utils.Smart;
 
 
 
@@ -16,8 +15,9 @@ public abstract class Entity extends Actor {
 
 	protected float dx, dy, dz = 0;
 	protected float friction = 0.0002f;
-	protected float weight = 0.0003f;
+	protected float weight = 0.0006f;
 	protected boolean onGround = false;
+	protected Chunk old_chunk = null;
 
 
 	public Entity(Scene scene, float x, float y, float z) {
@@ -32,45 +32,40 @@ public abstract class Entity extends Actor {
 	}
 
 	private void updatePhysics(int delta){
-
-		dy -= (weight * delta);
+		dy -= (weight);
 		Chunk chunk = getChunk();
-
 		if(chunk.isLoaded()){
-
+			
 			float next_x = x + (dx * delta);
 			float next_y = y + (dy * delta);
 			float next_z = z + (dz * delta);
 
-			float mod = (Block.SIZE * Chunk.HEIGHT);
-			int mod_div = Block.SIZE;
+			Block next_block = chunk.getBlock(Smart.mod(x, Chunk.WIDTH), Smart.mod(y, Chunk.HEIGHT), Smart.mod(z, Chunk.WIDTH));
+			
+			Block next_block_1_x1_left = chunk.getBlock(Smart.mod(next_x-getHitbox().getWidth()/2, Chunk.WIDTH), Smart.mod(y, Chunk.HEIGHT), Smart.mod((z-getHitbox().getWidth()/2), Chunk.WIDTH) );
+			Block next_block_1_x1_right = chunk.getBlock(Smart.mod(next_x-getHitbox().getWidth()/2, Chunk.WIDTH), Smart.mod(y, Chunk.HEIGHT), Smart.mod((z+getHitbox().getWidth()/2), Chunk.WIDTH) );
+			Block next_block_1_x2_left = chunk.getBlock(Smart.mod(next_x+getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(y, Chunk.HEIGHT), Smart.mod((z-getHitbox().getWidth()/2), Chunk.WIDTH) );
+			Block next_block_1_x2_right = chunk.getBlock(Smart.mod(next_x+getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(y, Chunk.HEIGHT), Smart.mod((z+getHitbox().getWidth()/2), Chunk.WIDTH) );
 
-			Block next_block = chunk.getBlock((int)(x%(16*16)/ Block.SIZE), (int)Math.min((y%(mod)) / mod_div, Chunk.HEIGHT), (int)z%(16*16) / Block.SIZE);
+			Block next_block_2_x1_left = chunk.getBlock(Smart.mod(next_x-getHitbox().getWidth()/2, Chunk.WIDTH), Smart.mod(y+getHitbox().getHeight(), Chunk.HEIGHT), Smart.mod((z-getHitbox().getWidth()/2), Chunk.WIDTH));
+			Block next_block_2_x1_right = chunk.getBlock(Smart.mod(next_x-getHitbox().getWidth()/2, Chunk.WIDTH), Smart.mod(y+getHitbox().getHeight(), Chunk.HEIGHT), Smart.mod((z+getHitbox().getWidth()/2), Chunk.WIDTH) );
+			Block next_block_2_x2_left = chunk.getBlock(Smart.mod(next_x+getHitbox().getWidth()/2, Chunk.WIDTH), Smart.mod(y+getHitbox().getHeight(), Chunk.HEIGHT), Smart.mod((z-getHitbox().getWidth()/2), Chunk.WIDTH) );
+			Block next_block_2_x2_right = chunk.getBlock(Smart.mod(next_x+getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(y+getHitbox().getHeight(), Chunk.HEIGHT), Smart.mod((z+getHitbox().getWidth()/2), Chunk.WIDTH) );
 
-			Block next_block_1_x1_left = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ Block.SIZE, (int)(y%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
-			Block next_block_1_x1_right = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ Block.SIZE, (int)(y%(mod)) / mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
-			Block next_block_1_x2_left = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)(y%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
-			Block next_block_1_x2_right = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)(y%(mod))/ mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
+			Block next_block_y1_right = chunk.getBlock(Smart.mod(x+getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(next_y, Chunk.HEIGHT), Smart.mod(z, Chunk.WIDTH));
+			Block next_block_y1_left = chunk.getBlock(Smart.mod(x-getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(next_y, Chunk.HEIGHT), Smart.mod(z, Chunk.WIDTH) );
+			Block next_block_y1_up = chunk.getBlock(Smart.mod(x, Chunk.WIDTH) , Smart.mod(next_y, Chunk.HEIGHT), Smart.mod(z+getHitbox().getWidth()/2, Chunk.WIDTH) );
+			Block next_block_y1_down = chunk.getBlock(Smart.mod(x, Chunk.WIDTH) , Smart.mod(next_y, Chunk.HEIGHT), Smart.mod(z-getHitbox().getWidth()/2, Chunk.WIDTH) );
 
-			Block next_block_2_x1_left = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
-			Block next_block_2_x1_right = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
-			Block next_block_2_x2_left = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
-			Block next_block_2_x2_right = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
+			Block next_block_1_z1_left = chunk.getBlock(Smart.mod(x-getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(y, Chunk.HEIGHT), Smart.mod(next_z-getHitbox().getLength()/2, Chunk.WIDTH) );
+			Block next_block_1_z1_right = chunk.getBlock(Smart.mod(x+getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(y, Chunk.HEIGHT), Smart.mod(next_z-getHitbox().getLength()/2, Chunk.WIDTH) );
+			Block next_block_1_z2_left = chunk.getBlock(Smart.mod(x-getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(y, Chunk.HEIGHT), Smart.mod(next_z+getHitbox().getLength()/2, Chunk.WIDTH) );
+			Block next_block_1_z2_right = chunk.getBlock(Smart.mod(x+getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(y, Chunk.HEIGHT), Smart.mod(next_z+getHitbox().getLength()/2, Chunk.WIDTH) );
 
-			Block next_block_y1_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)(z%(16*16)) / Block.SIZE);
-			Block next_block_y1_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)(z%(16*16)) / Block.SIZE);
-			Block next_block_y1_up = chunk.getBlock((int)(x%(16*16)) / Block.SIZE, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)((z+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
-			Block next_block_y1_down = chunk.getBlock((int)(x%(16*16)) / Block.SIZE, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)((z-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
-
-			Block next_block_1_z1_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)(y%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
-			Block next_block_1_z1_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)(y%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
-			Block next_block_1_z2_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)(y%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
-			Block next_block_1_z2_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)(y%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
-
-			Block next_block_2_z1_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
-			Block next_block_2_z1_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
-			Block next_block_2_z2_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
-			Block next_block_2_z2_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
+			Block next_block_2_z1_left = chunk.getBlock(Smart.mod(x-getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(y+getHitbox().getHeight(), Chunk.HEIGHT), Smart.mod(next_z-getHitbox().getLength()/2, Chunk.WIDTH) );
+			Block next_block_2_z1_right = chunk.getBlock(Smart.mod(x+getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(y+getHitbox().getHeight(), Chunk.HEIGHT), Smart.mod(next_z-getHitbox().getLength()/2, Chunk.WIDTH) );
+			Block next_block_2_z2_left = chunk.getBlock(Smart.mod(x-getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(y+getHitbox().getHeight(), Chunk.HEIGHT), Smart.mod(next_z+getHitbox().getLength()/2, Chunk.WIDTH) );
+			Block next_block_2_z2_right = chunk.getBlock(Smart.mod(x+getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(y+getHitbox().getHeight(), Chunk.HEIGHT), Smart.mod(next_z+getHitbox().getLength()/2, Chunk.WIDTH) );
 
 
 			if(next_block.isSolid()){
@@ -90,7 +85,7 @@ public abstract class Entity extends Actor {
 
 			}else{
 				if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
-					dy += 0.007f * delta;
+					dy += 0.00060f * delta;
 				}else{
 					dy = 0 * delta;
 				}
@@ -103,11 +98,7 @@ public abstract class Entity extends Actor {
 			}else{
 				dz = 0;
 			}
-
-		}else{
-			x += (dx * delta);
-			y += (dy * delta);
-			z += (dz * delta);
+	
 		}
 
 		if(dx > 0){
@@ -138,6 +129,14 @@ public abstract class Entity extends Actor {
 				dz += friction * delta;
 			}
 		}
+
+		if(old_chunk != null){
+			if(old_chunk != getChunk()){
+				onChunkLeave(old_chunk, delta);
+			}
+		}
+		
+		old_chunk = getChunk();
 
 	}
 
@@ -171,42 +170,6 @@ public abstract class Entity extends Actor {
 
 	private void updateChunk(int delta){
 		if(updateChunks){
-
-			/*for(int xx = 0; x < ((World) scene).chunks.length; xx++){
-				for(int zz = 0; zz < ((World) scene).chunks[xx].length; zz++){
-					Chunk chunk = ((World) scene).chunks[xx][zz];
-					if(chunk != null){
-						float distance = (float) Math.sqrt((((chunk.x+this.x) - chunk.x)*
-								((chunk.x+this.x) - chunk.x) + ((chunk.z+this.z) - chunk.z) - z)*
-								(chunk.z+this.z) - this.z);
-
-						if(distance <= 16){
-
-							if(!chunk.isInitialized()){
-								chunk.initialize();
-							}else{
-								chunk.update(delta);
-							}
-							if(!chunk.isLoaded()){
-								if(!chunk.chunkFileExists()){
-
-									chunk.setAir();
-									chunk.generate();
-									chunk.save();
-
-								}else{
-									chunk.load();
-								}
-							}
-						}
-					}
-				}
-			}*/
-
-
-			/*if(((World) scene).chunks[1][1].isInitialized()){
-				((World) scene).chunks[1][1].update(delta);
-			}*/
 			if(!getChunk().isInitialized()){
 				getChunk().initialize();
 			}else{
@@ -224,5 +187,9 @@ public abstract class Entity extends Actor {
 			}
 
 		}
+	}
+
+	private void onChunkLeave(Chunk chunk, int delta){
+		chunk.unload();
 	}
 }

@@ -82,7 +82,7 @@ public abstract class Actor {
 	
 	public Chunk getChunk(){
 		Chunk[][] chunks = ((World) scene).chunks;
-		return chunks[((int)(this.x/(Block.SIZE * Chunk.WIDTH)))][((int)(this.z/(Block.SIZE * Chunk.WIDTH)))];
+		return chunks[((int)(this.x/(Chunk.WIDTH)))][((int)(this.z/(Chunk.WIDTH)))];
 	}
 	
 	public boolean updatesChunks(){

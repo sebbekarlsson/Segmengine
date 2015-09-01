@@ -8,8 +8,10 @@ import org.lwjgl.input.Mouse;
 
 import rt.main.Actor;
 import rt.main.Scene;
+import rt.main.scenes.worlds.Chunk;
 import rt.main.scenes.worlds.World;
 import rt.main.types.BlockType;
+import rt.main.utils.Smart;
 
 
 public class Player extends Entity {
@@ -24,13 +26,13 @@ public class Player extends Entity {
 	@Override
 	public void tick(int delta) {
 		if(Keyboard.isKeyDown(Keyboard.KEY_W)){
-			dx += (0.0004f * (float) Math.sin(Math.toRadians(scene.getCamera().getYaw()))) * delta;
-			dz -= (0.0004f * (float) Math.cos(Math.toRadians(scene.getCamera().getYaw()))) * delta;
+			dx += (0.0002f * (float) Math.sin(Math.toRadians(scene.getCamera().getYaw()))) * delta;
+			dz -= (0.0002f * (float) Math.cos(Math.toRadians(scene.getCamera().getYaw()))) * delta;
 		}
 		while(Keyboard.next()){
 			if (Keyboard.getEventKeyState()){
 				if(Keyboard.getEventKey() == Keyboard.KEY_LCONTROL){
-					getChunk().setBlock((int)((this.x%(16*16))/Block.SIZE), (int)((this.y%(16*256))/Block.SIZE), (int)((this.z%(16*16))/Block.SIZE), BlockType.getRandom());
+					getChunk().setBlock(Smart.mod(x, Chunk.WIDTH), Smart.mod(y, Chunk.HEIGHT), Smart.mod(z, Chunk.WIDTH), BlockType.getRandom());
 				}
 				if(Keyboard.getEventKey() == Keyboard.KEY_R){
 					y = 120;
@@ -48,9 +50,9 @@ public class Player extends Entity {
 	public void init() {
 		getHitbox().setDraw(true);
 		getHitbox().setColor(Color.blue);
-		getHitbox().setWidth(Block.SIZE / 2);
-		getHitbox().setLength(Block.SIZE / 2);
-		getHitbox().setHeight((Block.SIZE * 2)-1);
+		getHitbox().setWidth(0.5f);
+		getHitbox().setLength(0.5f);
+		getHitbox().setHeight((Block.SIZE * 2) - 0.25f);
 		getHitbox().setX(-getHitbox().getWidth() / 2);
 		getHitbox().setZ(-getHitbox().getLength() / 2);
 

@@ -14,7 +14,6 @@ public class World extends Scene {
 	public WorldGenerator worldgenerator = new WorldGenerator(this);
 	public int chunk_number = 128;
 	public Chunk[][] chunks = new Chunk[chunk_number][chunk_number];
-	public ChunkHandler chunkHandler;
 	Random random = new Random();
 
 	@Override
@@ -30,7 +29,7 @@ public class World extends Scene {
 		//chunkHandler = new ChunkHandler(chunks);
 		//chunkHandler.start();
 
-		player = new Player(this, 0, 128, 0);
+		player = new Player(this, 4, 24, 4);
 		stageActor(player);
 
 
@@ -46,7 +45,7 @@ public class World extends Scene {
 		}*/
 
 		getCamera().x = getPlayer().x;
-		getCamera().y = getPlayer().y+(Block.SIZE + (Block.SIZE/2));
+		getCamera().y = getPlayer().y+(Block.SIZE * 2) - 0.25f;
 		getCamera().z = getPlayer().z;
 
 	}

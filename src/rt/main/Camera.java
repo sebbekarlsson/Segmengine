@@ -9,8 +9,8 @@ import rt.main.physics.Frustum;
 import rt.main.scenes.worlds.Chunk;
 import rt.main.scenes.worlds.Ray;
 import rt.main.scenes.worlds.World;
-import rt.main.test.Building;
 import rt.main.types.BlockType;
+import rt.main.utils.Smart;
 
 public class Camera extends Actor {
 
@@ -101,9 +101,6 @@ public class Camera extends Actor {
 		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
 			x += 0.2f;
 		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_RETURN)){
-			scene.stageActor(new Building(scene,-x,-y,-z));
-		}
 	}
 
 
@@ -116,19 +113,17 @@ public class Camera extends Actor {
 	public Block getFacingBlock(){
 		Ray ray = new Ray(this.scene, x, y, z);
 		
-		for(int range = 0; range < 6*16; range++){
+		for(int range = 0; range < 16; range++){
 			ray.x += (float) Math.sin(Math.toRadians(getYaw()));
 			ray.z -= (float) Math.cos(Math.toRadians(getYaw()));
 			ray.y -= (float) Math.tan(Math.toRadians(getPitch()));
 			Chunk chunk = ray.getChunk();
 			if(chunk.isLoaded()){
 				Block[][][] blocks = chunk.blocks;
-				float mod = (Block.SIZE * Chunk.HEIGHT);
-				int mod_div = Block.SIZE;
 
-				int _x = (int)ray.x%(16*16)/ 16;
-				int _y = (int)(ray.y%(mod) / mod_div);
-				int _z = (int)ray.z%(16*16)/ 16;
+				int _x = (int)Smart.mod(ray.x, Chunk.WIDTH);
+				int _y = (int)Smart.mod(ray.y, Chunk.HEIGHT);
+				int _z = (int)Smart.mod(ray.z, Chunk.WIDTH);
 
 				if(_x >= 0 && _x <= ((World)scene).chunk_number*16 && _z >= 0 && _z <= ((World)scene).chunk_number*16 && _y >= 0 && _y <= ((World)scene).chunk_number*16 ){
 
@@ -176,8 +171,8 @@ public class Camera extends Actor {
 				int placey = (int)(((b_v.y+1)%(16*256))/16);
 				int placez = (int)((b_v.z%(16*16))/16);*/
 
-				if(block.ray.getChunk().getBlock((int)(placex%(16*16) / 16), (int)(placey%(16*256) / 16), (int)(placez%(16*16) / 16)).getType().equals(BlockType.AIR)){
-					block.ray.getChunk().setBlock((int)(placex%(16*16) / 16), (int)(placey%(16*256) / 16), (int)(placez%(16*16) / 16), BlockType.COBBLE);
+				if(block.ray.getChunk().getBlock(Smart.mod(placex, Chunk.WIDTH), Smart.mod(placey, Chunk.HEIGHT), Smart.mod(placez, Chunk.WIDTH)).getType().equals(BlockType.AIR)){
+					block.ray.getChunk().setBlock(Smart.mod(placex, Chunk.WIDTH), Smart.mod(placey, Chunk.HEIGHT), Smart.mod(placez, Chunk.WIDTH), BlockType.COBBLE);
 				}
 
 

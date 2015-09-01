@@ -66,8 +66,6 @@ public class Block extends BoxActor {
 		this.getSide("bottom").texture = blocktype.texture_bottom;
 		this.getSide("back").texture = blocktype.texture_back;
 		this.getSide("front").texture = blocktype.texture_front;
-
-		tickle();
 		
 		return this;
 	}
@@ -134,6 +132,10 @@ public class Block extends BoxActor {
 	
 	public Block intersectsWithRay(Ray ray){
 		 if(ray.x >= this.x-(SIZE/2) && ray.x <= this.x+(SIZE*2) && ray.z >= this.z-(SIZE/2) && ray.z <= this.z+(SIZE*2) && ray.y >= this.y-(SIZE/2) && ray.y <= this.y+(SIZE*2)){
+			 this.ray = ray;
+			 return this;
+		 }
+		 else if(ray.x >= this.x && ray.x <= this.x && ray.z >= this.z && ray.z <= this.z && ray.y >= this.y && ray.y <= this.y){
 			 this.ray = ray;
 			 return this;
 		 }
