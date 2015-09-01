@@ -32,16 +32,18 @@ public abstract class Entity extends Actor {
 	}
 
 	private void updatePhysics(int delta){
-		dy -= (weight);
+		if(!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
+			dy -= (weight);
+		}
 		Chunk chunk = getChunk();
 		if(chunk.isLoaded()){
-			
+
 			float next_x = x + (dx * delta);
 			float next_y = y + (dy * delta);
 			float next_z = z + (dz * delta);
 
 			Block next_block = chunk.getBlock(Smart.mod(x, Chunk.WIDTH), Smart.mod(y, Chunk.HEIGHT), Smart.mod(z, Chunk.WIDTH));
-			
+
 			Block next_block_1_x1_left = chunk.getBlock(Smart.mod(next_x-getHitbox().getWidth()/2, Chunk.WIDTH), Smart.mod(y, Chunk.HEIGHT), Smart.mod((z-getHitbox().getWidth()/2), Chunk.WIDTH) );
 			Block next_block_1_x1_right = chunk.getBlock(Smart.mod(next_x-getHitbox().getWidth()/2, Chunk.WIDTH), Smart.mod(y, Chunk.HEIGHT), Smart.mod((z+getHitbox().getWidth()/2), Chunk.WIDTH) );
 			Block next_block_1_x2_left = chunk.getBlock(Smart.mod(next_x+getHitbox().getWidth()/2, Chunk.WIDTH) , Smart.mod(y, Chunk.HEIGHT), Smart.mod((z-getHitbox().getWidth()/2), Chunk.WIDTH) );
@@ -98,7 +100,7 @@ public abstract class Entity extends Actor {
 			}else{
 				dz = 0;
 			}
-	
+
 		}
 
 		if(dx > 0){
@@ -135,7 +137,7 @@ public abstract class Entity extends Actor {
 				onChunkLeave(old_chunk, delta);
 			}
 		}
-		
+
 		old_chunk = getChunk();
 
 	}
