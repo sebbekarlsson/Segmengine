@@ -1,7 +1,7 @@
 package rt.main.actors;
 
 
-
+import java.awt.Color;
 
 import org.lwjgl.input.Keyboard;
 
@@ -18,7 +18,6 @@ public abstract class Entity extends Actor {
 	protected float friction = 0.0002f;
 	protected float weight = 0.0003f;
 	protected boolean onGround = false;
-	protected Chunk old_chunk = null;
 
 
 	public Entity(Scene scene, float x, float y, float z) {
@@ -26,9 +25,7 @@ public abstract class Entity extends Actor {
 	}
 
 	public void update(int delta){
-		if(this.updatesChunks()){
-			updateChunks(delta);
-		}
+		updateChunk(delta);
 		updatePhysics(delta);
 		tick(delta);
 		draw(delta);
@@ -48,32 +45,33 @@ public abstract class Entity extends Actor {
 			float mod = (Block.SIZE * Chunk.HEIGHT);
 			int mod_div = Block.SIZE;
 
-			Block next_block = chunk.getBlock((int)(x%(16*16)/ 16), (int)Math.min((y%(mod)) / mod_div, Chunk.HEIGHT), (int)z%(16*16) / 16);
+			Block next_block = chunk.getBlock((int)(x%(16*16)/ Block.SIZE), (int)Math.min((y%(mod)) / mod_div, Chunk.HEIGHT), (int)z%(16*16) / Block.SIZE);
 
-			Block next_block_1_x1_left = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ 16, (int)(y%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / 16);
-			Block next_block_1_x1_right = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ 16, (int)(y%(mod)) / mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / 16);
-			Block next_block_1_x2_left = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)(y%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / 16);
-			Block next_block_1_x2_right = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)(y%(mod))/ mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / 16);
+			Block next_block_1_x1_left = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ Block.SIZE, (int)(y%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
+			Block next_block_1_x1_right = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ Block.SIZE, (int)(y%(mod)) / mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
+			Block next_block_1_x2_left = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)(y%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
+			Block next_block_1_x2_right = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)(y%(mod))/ mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
 
-			Block next_block_2_x1_left = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / 16);
-			Block next_block_2_x1_right = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / 16);
-			Block next_block_2_x2_left = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / 16);
-			Block next_block_2_x2_right = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / 16);
+			Block next_block_2_x1_left = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
+			Block next_block_2_x1_right = chunk.getBlock((int)((next_x-getHitbox().getWidth()/2)%(16*16))/ Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
+			Block next_block_2_x2_left = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
+			Block next_block_2_x2_right = chunk.getBlock((int)((next_x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((z+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
 
-			Block next_block_y1_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / 16, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)(z%(16*16)) / 16);
-			Block next_block_y1_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / 16, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)(z%(16*16)) / 16);
-			Block next_block_y1_up = chunk.getBlock((int)(x%(16*16)) / 16, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)((z+getHitbox().getWidth()/2)%(16*16)) / 16);
-			Block next_block_y1_down = chunk.getBlock((int)(x%(16*16)) / 16, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)((z-getHitbox().getWidth()/2)%(16*16)) / 16);
+			Block next_block_y1_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)(z%(16*16)) / Block.SIZE);
+			Block next_block_y1_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)(z%(16*16)) / Block.SIZE);
+			Block next_block_y1_up = chunk.getBlock((int)(x%(16*16)) / Block.SIZE, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)((z+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
+			Block next_block_y1_down = chunk.getBlock((int)(x%(16*16)) / Block.SIZE, Math.max(0, (int)(next_y%(mod)) / mod_div), (int)((z-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE);
 
-			Block next_block_1_z1_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / 16, (int)(y%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / 16);
-			Block next_block_1_z1_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)(y%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / 16);
-			Block next_block_1_z2_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / 16, (int)(y%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / 16);
-			Block next_block_1_z2_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)(y%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / 16);
+			Block next_block_1_z1_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)(y%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
+			Block next_block_1_z1_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)(y%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
+			Block next_block_1_z2_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)(y%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
+			Block next_block_1_z2_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)(y%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
 
-			Block next_block_2_z1_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / 16);
-			Block next_block_2_z1_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / 16);
-			Block next_block_2_z2_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / 16);
-			Block next_block_2_z2_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / 16, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / 16);
+			Block next_block_2_z1_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
+			Block next_block_2_z1_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z-getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
+			Block next_block_2_z2_left = chunk.getBlock((int)((x-getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
+			Block next_block_2_z2_right = chunk.getBlock((int)((x+getHitbox().getWidth()/2)%(16*16)) / Block.SIZE, (int)((y+getHitbox().getHeight())%(mod)) / mod_div, (int)((next_z+getHitbox().getLength()/2)%(16*16)) / Block.SIZE);
+
 
 			if(next_block.isSolid()){
 				y = next_block.y+next_block.getHitbox().getHeight();
@@ -141,10 +139,6 @@ public abstract class Entity extends Actor {
 			}
 		}
 
-		if(old_chunk != getChunk()){
-			onChunkLeave(old_chunk);
-		}
-		old_chunk = getChunk();
 	}
 
 	public float getDx(){
@@ -175,42 +169,60 @@ public abstract class Entity extends Actor {
 		this.weight = weight;
 	}
 
-	private void initialChunkUpdate(Chunk chunk, int delta){
+	private void updateChunk(int delta){
+		if(updateChunks){
 
-		if(!chunk.isInitialized()){
-			chunk.initialize();
-		}else{
-			chunk.update(delta);
-		}
-		if(!chunk.isLoaded()){
-			if(!chunk.chunkFileExists()){
-				chunk.setAir();
-				chunk.generate();
-				chunk.save();
+			/*for(int xx = 0; x < ((World) scene).chunks.length; xx++){
+				for(int zz = 0; zz < ((World) scene).chunks[xx].length; zz++){
+					Chunk chunk = ((World) scene).chunks[xx][zz];
+					if(chunk != null){
+						float distance = (float) Math.sqrt((((chunk.x+this.x) - chunk.x)*
+								((chunk.x+this.x) - chunk.x) + ((chunk.z+this.z) - chunk.z) - z)*
+								(chunk.z+this.z) - this.z);
 
+						if(distance <= 16){
+
+							if(!chunk.isInitialized()){
+								chunk.initialize();
+							}else{
+								chunk.update(delta);
+							}
+							if(!chunk.isLoaded()){
+								if(!chunk.chunkFileExists()){
+
+									chunk.setAir();
+									chunk.generate();
+									chunk.save();
+
+								}else{
+									chunk.load();
+								}
+							}
+						}
+					}
+				}
+			}*/
+
+
+			/*if(((World) scene).chunks[1][1].isInitialized()){
+				((World) scene).chunks[1][1].update(delta);
+			}*/
+			if(!getChunk().isInitialized()){
+				getChunk().initialize();
 			}else{
-				chunk.load();
-				chunk.tickle();
+				getChunk().update(delta);
 			}
-		}
+			if(!getChunk().isLoaded()){
+				if(!getChunk().chunkFileExists()){
+					getChunk().setAir();
+					getChunk().generate();
+					getChunk().save();
 
-
-	}
-	
-	public void updateChunks(int delta){
-		World world = ((World) scene);
-		
-		initialChunkUpdate(getChunk(), delta);
-		initialChunkUpdate(world.getChunk(0, 1), delta);
-	}
-
-	private void onChunkLeave(Chunk chunk){
-		if(this.updatesChunks()){
-			if(chunk != null){
-				chunk.unload();
-				chunk.kill();
-				System.gc();
+				}else{
+					getChunk().load();
+				}
 			}
+
 		}
 	}
 }

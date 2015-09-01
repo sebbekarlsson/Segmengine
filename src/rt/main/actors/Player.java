@@ -30,7 +30,7 @@ public class Player extends Entity {
 		while(Keyboard.next()){
 			if (Keyboard.getEventKeyState()){
 				if(Keyboard.getEventKey() == Keyboard.KEY_LCONTROL){
-					getChunk().setBlock((int)((this.x%(16*16))/16), (int)((this.y%(16*256))/16), (int)((this.z%(16*16))/16), BlockType.getRandom());
+					getChunk().setBlock((int)((this.x%(16*16))/Block.SIZE), (int)((this.y%(16*256))/Block.SIZE), (int)((this.z%(16*16))/Block.SIZE), BlockType.getRandom());
 				}
 				if(Keyboard.getEventKey() == Keyboard.KEY_R){
 					y = 120;
@@ -48,9 +48,9 @@ public class Player extends Entity {
 	public void init() {
 		getHitbox().setDraw(true);
 		getHitbox().setColor(Color.blue);
-		getHitbox().setWidth(8f);
-		getHitbox().setLength(8f);
-		getHitbox().setHeight((16*2)-1);
+		getHitbox().setWidth(Block.SIZE / 2);
+		getHitbox().setLength(Block.SIZE / 2);
+		getHitbox().setHeight((Block.SIZE * 2)-1);
 		getHitbox().setX(-getHitbox().getWidth() / 2);
 		getHitbox().setZ(-getHitbox().getLength() / 2);
 

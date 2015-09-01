@@ -3,14 +3,10 @@ package rt.main.scenes.worlds;
 import java.awt.Color;
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector;
-import org.lwjgl.util.vector.Vector3f;
 
 import rt.main.Scene;
 import rt.main.actors.Block;
 import rt.main.actors.Player;
-import rt.main.types.BlockType;
 
 public class World extends Scene {
 
@@ -50,7 +46,7 @@ public class World extends Scene {
 		}*/
 
 		getCamera().x = getPlayer().x;
-		getCamera().y = getPlayer().y+24f;
+		getCamera().y = getPlayer().y+(Block.SIZE + (Block.SIZE/2));
 		getCamera().z = getPlayer().z;
 
 	}
@@ -68,7 +64,7 @@ public class World extends Scene {
 	public void generateChunks(){
 		for(int x = 0; x < chunks.length; x++){
 			for(int z = 0; z < chunks[x].length; z++){
-				chunks[x][z] = new Chunk(this, x*16*16, 0, z*16*16);
+				chunks[x][z] = new Chunk(this, x*Block.SIZE*16, 0, z*Block.SIZE*16);
 			}
 		}
 	}

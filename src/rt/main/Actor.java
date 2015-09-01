@@ -1,5 +1,6 @@
 package rt.main;
 
+import rt.main.actors.Block;
 import rt.main.physics.Hitbox;
 import rt.main.scenes.worlds.Chunk;
 import rt.main.scenes.worlds.World;
@@ -81,7 +82,7 @@ public abstract class Actor {
 	
 	public Chunk getChunk(){
 		Chunk[][] chunks = ((World) scene).chunks;
-		return chunks[((int)(this.x/(16*16)))][((int)(this.z/(16*16)))];
+		return chunks[((int)(this.x/(Block.SIZE * Chunk.WIDTH)))][((int)(this.z/(Block.SIZE * Chunk.WIDTH)))];
 	}
 	
 	public boolean updatesChunks(){

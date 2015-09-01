@@ -90,7 +90,7 @@ public class Chunk extends Actor {
 	public Block setBlock(int x, int y, int z, BlockType type){
 
 		if(blocks[x][y][z] == null){
-			Block block = new Block(scene, this.x+(x * (16)), (y * 16), this.z+(z * (16)), type);
+			Block block = new Block(scene, this.x+(x * (Block.SIZE)), (y * Block.SIZE), this.z+(z * (Block.SIZE)), type);
 			blocks[x][y][z] = block;
 			stageActor(block.tickle());
 
@@ -180,7 +180,7 @@ public class Chunk extends Actor {
 		for(int i = 0; i < block_array.size(); i++){
 			JSONObject block =(JSONObject)block_array.get(i);
 			Block b = new Block(scene, Float.parseFloat(block.get("x").toString()), Float.parseFloat(block.get("y").toString()), Float.parseFloat(block.get("z").toString()), BlockType.valueOf(block.get("type").toString()));
-			setBlock((int)(b.x%(16*16)) / 16, (int)(b.y%(16*256)) / 16, (int)(b.z%(16*16)) / 16, b.getType());
+			setBlock((int)(b.x%(16*16)) / Block.SIZE, (int)(b.y%(16*256)) / Block.SIZE, (int)(b.z%(16*16)) / Block.SIZE, b.getType());
 		}
 		
 		this.loaded = true;
@@ -192,7 +192,7 @@ public class Chunk extends Actor {
 		for(int xx = 0; xx < WIDTH; xx++){
 			for(int yy = 0; yy < HEIGHT; yy++){
 				for(int zz = 0; zz < WIDTH; zz++){
-					Block block = new Block(scene, this.x+(xx * (16)), (yy * 16), this.z+(zz * (16)), BlockType.AIR);
+					Block block = new Block(scene, this.x+(xx * (Block.SIZE)), (yy * Block.SIZE), this.z+(zz * (Block.SIZE)), BlockType.AIR);
 					blocks[xx][yy][zz] = block;
 					stageActor(block);
 				}

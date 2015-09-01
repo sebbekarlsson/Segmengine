@@ -11,7 +11,7 @@ public class Block extends BoxActor {
 
 	private BlockType blocktype;
 	public Ray ray;
-	public static int SIZE = 16;
+	public static int SIZE = 1;
 
 	public Block(Scene scene, float x, float y, float z, BlockType blocktype) {
 		super(scene, x, y, z);
@@ -33,7 +33,7 @@ public class Block extends BoxActor {
 			draw = false;
 		}
 
-		
+		tickle();
 	}
 
 	@Override
@@ -85,32 +85,32 @@ public class Block extends BoxActor {
 			float mod = (Block.SIZE * Chunk.HEIGHT);
 			int mod_div = Block.SIZE;
 			
-			Block block_top = chunk.getBlock((int)(x/SIZE)%16, Math.min(Chunk.HEIGHT, (int)((y+16)%(mod)) / mod_div), (int)(z/SIZE)%16);
+			Block block_top = chunk.getBlock((int)(x/SIZE)%16, Math.min(Chunk.HEIGHT, (int)((y+Block.SIZE)%(mod)) / mod_div), (int)(z/SIZE)%16);
 			if(block_top.isSolid()){
 				if(!(block_top.isTransparent()))
 				this.getSide("top").draw = false;
 			}
-			Block block_bottom = chunk.getBlock((int)(x/SIZE)%16, Math.max(0, (int)((y-16)%(mod)) / mod_div), (int)(z/SIZE)%16);
+			Block block_bottom = chunk.getBlock((int)(x/SIZE)%16, Math.max(0, (int)((y-Block.SIZE)%(mod)) / mod_div), (int)(z/SIZE)%16);
 			if(block_bottom.isSolid()){
 				if(!(block_bottom.isTransparent()))
 				this.getSide("bottom").draw = false;
 			}
-			Block block_left = chunk.getBlock(Math.max(0, (int)((x-16)/SIZE)%16), (int)((y)%(mod)) / mod_div, (int)(z/SIZE)%16);
+			Block block_left = chunk.getBlock(Math.max(0, (int)((x-Block.SIZE)/SIZE)%16), (int)((y)%(mod)) / mod_div, (int)(z/SIZE)%16);
 			if(block_left.isSolid()){
 				if(!(block_left.isTransparent()))
 				this.getSide("left").draw = false;
 			}
-			Block block_right = chunk.getBlock(Math.min(16, (int)((x+16)/SIZE)%16), (int)((y)%(mod)) / mod_div, (int)(z/SIZE)%16);
+			Block block_right = chunk.getBlock(Math.min(16, (int)((x+Block.SIZE)/SIZE)%16), (int)((y)%(mod)) / mod_div, (int)(z/SIZE)%16);
 			if(block_right.isSolid()){
 				if(!(block_right.isTransparent()))
 				this.getSide("right").draw = false;
 			}
-			Block block_front = chunk.getBlock((int)(x/SIZE)%16, (int)((y)%(mod)) / mod_div, Math.min(16, (int)((z+16)/SIZE)%16));
+			Block block_front = chunk.getBlock((int)(x/SIZE)%16, (int)((y)%(mod)) / mod_div, Math.min(16, (int)((z+Block.SIZE)/SIZE)%16));
 			if(block_front.isSolid()){
 				if(!(block_front.isTransparent()))
 				this.getSide("front").draw = false;
 			}
-			Block block_back = chunk.getBlock((int)(x/SIZE)%16, (int)((y)%(mod)) / mod_div, Math.max(0, (int)((z-16)/SIZE)%16));
+			Block block_back = chunk.getBlock((int)(x/SIZE)%16, (int)((y)%(mod)) / mod_div, Math.max(0, (int)((z-Block.SIZE)/SIZE)%16));
 			if(block_back.isSolid()){
 				if(!(block_back.isTransparent()))
 				this.getSide("back").draw = false;
