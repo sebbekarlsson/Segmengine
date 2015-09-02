@@ -27,7 +27,7 @@ public class Block extends BoxActor {
 	@Override
 	public void tick(int delta) {
 		Camera camera = scene.getCamera();
-		if(camera.frustum.cubeInFrustum(x+SIZE, y+SIZE, z+SIZE/2, x, y, z)){
+		if(camera.frustum.cubeInFrustum(x+SIZE, y+SIZE, z+SIZE, x, y, z)){
 			draw = true;
 		}else{ 
 			draw = false;

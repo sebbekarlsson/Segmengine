@@ -101,7 +101,7 @@ public class Game {
         //Restore the Z axis
     	GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-        GLU.gluPerspective(92f, (float)Display.getWidth()/Display.getHeight(), 0.0001f, 1000);
+        GLU.gluPerspective(92f, (float)Display.getWidth()/Display.getHeight(), 0.1f, 1000);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glLoadIdentity();
         GL11.glEnable(GL11.GL_DEPTH_TEST);

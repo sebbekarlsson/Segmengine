@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -21,6 +24,16 @@ public class WorldGenerator{
 
 
 	public boolean generate() {
+		
+		// CHECK IF CHUNKS EXISTS, THEN DON'T GENERATE AN NEW WORLD //
+		try {
+			if(!isDirEmpty(new File("world/chunks").toPath())){
+				return true;
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 		BufferedImage map_height = new BufferedImage(Chunk.WIDTH * world.chunk_number, Chunk.WIDTH * world.chunk_number, BufferedImage.TYPE_INT_RGB);
 		BufferedImage map = new BufferedImage(Chunk.WIDTH * world.chunk_number, Chunk.WIDTH * world.chunk_number, BufferedImage.TYPE_INT_RGB);
 
@@ -137,5 +150,11 @@ public class WorldGenerator{
 
 
 		return true;
+	}
+	
+	private static boolean isDirEmpty(final Path directory) throws IOException {
+	    try(DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory)) {
+	        return !dirStream.iterator().hasNext();
+	    }
 	}
 }
