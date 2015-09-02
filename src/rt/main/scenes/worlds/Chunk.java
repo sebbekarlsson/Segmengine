@@ -30,7 +30,7 @@ public class Chunk extends Actor {
 	private boolean alive = false;
 	Random random = new Random();
 	public static int WIDTH = 16;
-	public static int HEIGHT = 64;
+	public static int HEIGHT = 16;
 
 	public Chunk(Scene scene, float x, float y, float z) {
 		super(scene, x, y, z);
@@ -44,13 +44,10 @@ public class Chunk extends Actor {
 		alive = true;
 		tick(delta);
 		draw(delta);
-
 		for(int i = 0; i < actors.size(); i++){
 			if(actors.get(i) != null){
 				actors.get(i).update(delta);
 				actors.get(i).getHitbox().update();
-
-
 
 				if(!actors.get(i).isInitialized()){
 					actors.get(i).initialize();
@@ -174,6 +171,7 @@ public class Chunk extends Actor {
 			setBlock((int)(b.x%(16)) / Block.SIZE, (int)(b.y%(256)) / Block.SIZE, (int)(b.z%(16)) / Block.SIZE, b.getType());
 		}
 		
+		
 		this.loaded = true;
 	}
 	
@@ -186,6 +184,16 @@ public class Chunk extends Actor {
 					Block block = new Block(scene, this.x+(xx * (Block.SIZE)), (yy * Block.SIZE), this.z+(zz * (Block.SIZE)), BlockType.AIR);
 					blocks[xx][yy][zz] = block;
 					stageActor(block);
+				}
+			}
+		}
+	}
+	
+	public void tickle(){
+		for(int xx = 0; xx < WIDTH; xx++){
+			for(int yy = 0; yy < HEIGHT; yy++){
+				for(int zz = 0; zz < WIDTH; zz++){
+					blocks[xx][yy][zz].tickle();
 				}
 			}
 		}
@@ -208,7 +216,6 @@ public class Chunk extends Actor {
 	}
 	
 	public void generate(){
-		
 		BufferedImage map_height = null;
 		BufferedImage map = null;
 		try {

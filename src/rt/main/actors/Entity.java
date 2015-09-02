@@ -2,6 +2,8 @@ package rt.main.actors;
 
 
 
+import java.util.ArrayList;
+
 import org.lwjgl.input.Keyboard;
 
 import rt.main.Actor;
@@ -25,7 +27,9 @@ public abstract class Entity extends Actor {
 	}
 
 	public void update(int delta){
-		updateChunk(delta);
+		if(this.updatesChunks()){
+			updateChunks(delta);
+		}
 		updatePhysics(delta);
 		tick(delta);
 		draw(delta);
@@ -170,24 +174,29 @@ public abstract class Entity extends Actor {
 		this.weight = weight;
 	}
 
-	private void updateChunk(int delta){
-		if(updateChunks){
-			if(!getChunk().isInitialized()){
-				getChunk().initialize();
+	private void updateChunk(int delta, Chunk chunk){
+		if(!chunk.isInitialized()){
+			chunk.initialize();
+		}else{
+			chunk.update(delta);
+		}
+		if(!chunk.isLoaded()){
+			if(!chunk.chunkFileExists()){
+				chunk.setAir();
+				chunk.generate();
+				chunk.save();
+
 			}else{
-				getChunk().update(delta);
+				chunk.load();
 			}
-			if(!getChunk().isLoaded()){
-				if(!getChunk().chunkFileExists()){
-					getChunk().setAir();
-					getChunk().generate();
-					getChunk().save();
+		}
 
-				}else{
-					getChunk().load();
-				}
-			}
+	}
 
+	private void updateChunks(int delta){
+		ArrayList<Chunk> chunks = getVisibleChunks(2);
+		for(int i = 0; i < chunks.size(); i++){
+			updateChunk(delta, chunks.get(i));
 		}
 	}
 

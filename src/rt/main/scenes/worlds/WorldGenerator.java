@@ -26,13 +26,13 @@ public class WorldGenerator{
 	public boolean generate() {
 		
 		// CHECK IF CHUNKS EXISTS, THEN DON'T GENERATE AN NEW WORLD //
-		try {
-			if(!isDirEmpty(new File("world/chunks").toPath())){
-				return true;
-			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		//try {
+		//	if(!isDirEmpty(new File("world/chunks").toPath())){
+		//		return true;
+		//	}
+		//} catch (IOException e1) {
+		//	e1.printStackTrace();
+		//}
 		
 		BufferedImage map_height = new BufferedImage(Chunk.WIDTH * world.chunk_number, Chunk.WIDTH * world.chunk_number, BufferedImage.TYPE_INT_RGB);
 		BufferedImage map = new BufferedImage(Chunk.WIDTH * world.chunk_number, Chunk.WIDTH * world.chunk_number, BufferedImage.TYPE_INT_RGB);
@@ -75,7 +75,7 @@ public class WorldGenerator{
 		
 		
 		// - SET BASE HEIGHT - //
-		int normal_height = 16;
+		int normal_height = 1;
 		for(int x = 0; x < map_height.getWidth(); x++){
 			for(int z = 0; z < map_height.getHeight(); z++){
 				int r = 0;
@@ -117,7 +117,7 @@ public class WorldGenerator{
 				}
 
 				// - SLOPES - //
-				if(random.nextInt(60) == 0 && new Color(map.getRGB(x, z)).getRed() != 255){
+				/*if(random.nextInt(60) == 0 && new Color(map.getRGB(x, z)).getRed() != 255){
 					int rough = 1;
 					if(random.nextInt(3) == 0){
 						rough = random.nextInt(4)+1;
@@ -137,7 +137,7 @@ public class WorldGenerator{
 							}
 						}
 					}
-				}
+				}*/
 			}
 		}
 
