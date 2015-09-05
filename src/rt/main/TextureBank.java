@@ -23,8 +23,8 @@ public class TextureBank {
 	
 	/**
 	 * 
-	 * @param path
-	 * @param format
+	 * @param path the path to the image.
+	 * @param format the format of the image. for example "png" or "jpg".
 	 * @return a texture specified from a folder and a format
 	 */
 	public static Texture loadTexture(String path, String format){

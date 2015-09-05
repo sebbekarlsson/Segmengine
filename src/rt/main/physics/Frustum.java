@@ -5,6 +5,11 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+/**
+ * This class will remain undocumented because the author is unknown and the code is stolen.
+ * 
+ * @author Unknown
+ */
 public class Frustum {
 	public float[][] m_Frustum = new float[6][4];
 	public static final int RIGHT = 0;

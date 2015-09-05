@@ -1,7 +1,6 @@
 package rt.main.actors;
 
 import java.awt.Color;
-import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -16,8 +15,6 @@ import rt.main.utils.Smart;
 
 public class Player extends Entity {
 
-	Random random = new Random();
-
 	public Player(Scene scene, float x, float y, float z) {
 		super(scene, x, y, z);
 		updateChunks = true;
@@ -25,20 +22,33 @@ public class Player extends Entity {
 
 	@Override
 	public void tick(int delta) {
+		/*
+		 * Move the player forward if the W key is pressed.
+		 */
 		if(Keyboard.isKeyDown(Keyboard.KEY_W)){
 			dx += (0.0002f * (float) Math.sin(Math.toRadians(scene.getCamera().getYaw()))) * delta;
 			dz -= (0.0002f * (float) Math.cos(Math.toRadians(scene.getCamera().getYaw()))) * delta;
 		}
+		
 		while(Keyboard.next()){
 			if (Keyboard.getEventKeyState()){
+				/*
+				 * Place a block below the player
+				 */
 				if(Keyboard.getEventKey() == Keyboard.KEY_LCONTROL){
 					getChunk().setBlock(Smart.mod(x, Chunk.WIDTH), Smart.mod(y, Chunk.HEIGHT), Smart.mod(z, Chunk.WIDTH), BlockType.getRandom());
 				}
+				/*
+				 * Setting the player's Y value to 120.
+				 */
 				if(Keyboard.getEventKey() == Keyboard.KEY_R){
 					y = 120;
 				}
 			}
 		}
+		/*
+		 * Destroy the block that the player is facing. (Setting it to air)
+		 */
 		while(Mouse.next()){
 			if (Mouse.getEventButtonState()){
 				Block block = ((World)scene).getCamera().getFacingBlock();

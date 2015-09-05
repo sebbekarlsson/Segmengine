@@ -70,7 +70,7 @@ public class Block extends BoxActor {
 	 * Used to set the BlockType enumeration for the block.
 	 * This function also updates the size, texture and transparency in case of a change.
 	 * 
-	 * @param blocktype
+	 * @param blocktype the type of the block. For example: BlockType.COBBLE. (enumeration)
 	 * @return this block.
 	 */
 	public Block setType(BlockType blocktype){
@@ -155,7 +155,7 @@ public class Block extends BoxActor {
 	 * This function is used to set the size in units for the block.
 	 * 
 	 * @deprecated this function is deprecated since block-sizes will be hard-coded in the future.
-	 * @param size
+	 * @param size the size of the block in units.
 	 * @return this block.
 	 */
 	public Block setSize(int size){
@@ -178,7 +178,7 @@ public class Block extends BoxActor {
 	/**
 	 * This function is used to check if a block intersects with an array.
 	 * 
-	 * @param ray
+	 * @param ray a ray object.
 	 * @return a boolean value if ray exists, else it will return null.
 	 */
 	public Block intersectsWithRay(Ray ray){

@@ -6,14 +6,45 @@ import org.newdawn.slick.opengl.Texture;
 
 
 public class BoxSide{
-
+	
+	/*
+	 * The type of the side. For example "left" or "top".
+	 */
 	public String type;
+	
+	/*
+	 * The BoxActor that this side belongs to.
+	 */
 	public BoxActor boxactor;
+	
+	/*
+	 * The width of this side.
+	 */
 	public float width = 4;
+	
+	/*
+	 * The height of this side.
+	 */
 	public float height = 4;
+	
+	/*
+	 * The length of this side.
+	 */
 	public float length = 4;
+	
+	/*
+	 * The amount of repeat on the texture.
+	 */
 	public float textureRepeat = 1;
+	
+	/*
+	 * The texture of this side.
+	 */
 	public Texture texture;
+	
+	/*
+	 * We would like to know if this side should be drawn or not.
+	 */
 	public boolean draw = true;
 
 	public BoxSide(BoxActor boxactor, String type) {
@@ -21,14 +52,20 @@ public class BoxSide{
 		this.type = type;
 	}
 
-
+	/**
+	 * Updates the graphics and logic.
+	 */
 	public void update(){
 		tick();
 		if(draw){
 			draw();
 		}
 	}
-
+	
+	/**
+	 * Draws the face with it's texture depending on which type or side it is.
+	 * Normals should be added here later as well.
+	 */
 	public void draw() {
 		if(texture != null){
 			//back
@@ -209,7 +246,10 @@ public class BoxSide{
 		}
 
 	}
-
+	
+	/**
+	 * This is where logic should be updated.
+	 */
 	public void tick() {
 
 	}
