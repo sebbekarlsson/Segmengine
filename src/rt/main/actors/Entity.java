@@ -283,12 +283,10 @@ public abstract class Entity extends Actor {
 			if(!chunk.chunkFileExists()){
 				chunk.setAir();
 				chunk.generate();
-				chunk.tickle();
 				chunk.save();
 
 			}else{
 				chunk.load();
-				chunk.tickle();
 			}
 		}
 

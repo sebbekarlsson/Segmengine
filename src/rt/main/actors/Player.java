@@ -37,6 +37,7 @@ public class Player extends Entity {
 				 */
 				if(Keyboard.getEventKey() == Keyboard.KEY_LCONTROL){
 					getChunk().setBlock(Smart.mod(x, Chunk.WIDTH), Smart.mod(y, Chunk.HEIGHT), Smart.mod(z, Chunk.WIDTH), BlockType.getRandom());
+					System.out.println(x + " = " + Smart.mod(x, Chunk.WIDTH));
 				}
 				/*
 				 * Setting the player's Y value to 120.

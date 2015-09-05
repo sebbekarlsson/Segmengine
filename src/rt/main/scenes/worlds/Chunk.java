@@ -190,7 +190,7 @@ public class Chunk extends Actor {
 		}
 	}
 	
-	public void tickle(){
+	/*public void tickle(){
 		for(int xx = 0; xx < WIDTH; xx++){
 			for(int yy = 0; yy < HEIGHT; yy++){
 				for(int zz = 0; zz < WIDTH; zz++){
@@ -204,7 +204,7 @@ public class Chunk extends Actor {
 				}
 			}
 		}
-	}
+	}*/
 	
 	public void initializeBlocks(){
 		this.blocks = new Block[WIDTH][HEIGHT][WIDTH];
@@ -224,14 +224,11 @@ public class Chunk extends Actor {
 	
 	public void generate(){
 		BufferedImage map_height = null;
-		BufferedImage map = null;
 		try {
 			map_height = ImageIO.read(new File("world/map/map_height.png"));
-			map = ImageIO.read(new File("world/map/map.png"));
-			
-			map_height = map_height.getSubimage(Smart.mod(x, map_height.getWidth()), Smart.mod(z, map_height.getHeight()), 16, 16);
-			map = map.getSubimage(Smart.mod(x, map.getWidth()), Smart.mod(z, map.getHeight()), 16, 16);
+			map_height = map_height.getSubimage(Smart.mod(x, map_height.getWidth()), Smart.mod(z, map_height.getHeight()), Chunk.WIDTH, Chunk.WIDTH);
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -242,25 +239,16 @@ public class Chunk extends Actor {
 				int h_g = h_color.getGreen();
 				int h_b = h_color.getBlue();
 				
-				Color m_color = new Color(map.getRGB(x, z));
-				int m_r = m_color.getRed();
-				int m_g = m_color.getGreen();
-				int m_b = m_color.getBlue();
+
 				
 				int height = h_r;
-				BlockType type = BlockType.AIR;
+				BlockType type = BlockType.GRASS;
 				
-				if(m_g == 255){
-					type = BlockType.GRASS;
-				}
-				else if(m_r == 255){
-					type = BlockType.SAND;
-				}
 				
 				blocks[x][height][z].setType(type);
 				
 				// - TREE - //
-				if(random.nextInt(60) == 0 && m_r != 255){
+				/*if(random.nextInt(60) == 0 && m_r != 255){
 					int tree_height = 6;
 					for(int i = 1; i < tree_height; i++){
 						blocks[x][height+i][z].setType(BlockType.LOG);
@@ -284,7 +272,7 @@ public class Chunk extends Actor {
 						}
 					}
 					
-				}
+				}*/
 				
 				for(int i = 0; i < height; i++){
 					blocks[x][i][z].setType(BlockType.STONE);

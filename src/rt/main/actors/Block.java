@@ -45,6 +45,7 @@ public class Block extends BoxActor {
 		}else{ 
 			draw = false;
 		}
+		tickle();
 	}
 
 	@Override
