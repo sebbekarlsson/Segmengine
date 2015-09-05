@@ -66,8 +66,8 @@ public abstract class Actor {
 	
 	/**
 	 * This is not being used at all but was once used for collision checking.
-	 * This is deprecated and will be removed in a future version.
 	 * 
+	 * @deprecated this function is deprecated and will be removed shortly.
 	 * @param actor an actor object
 	 * @param timex a float value
 	 * @param timey a float value
