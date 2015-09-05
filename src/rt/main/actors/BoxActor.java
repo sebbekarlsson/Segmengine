@@ -13,12 +13,12 @@ public abstract class BoxActor extends Actor {
 	private float length = 16;
 
 	public BoxSide[] sides = new BoxSide[]{
-			new BoxSide(this, "left"),
 			new BoxSide(this, "right"),
-			new BoxSide(this, "top"),
-			new BoxSide(this, "bottom"),
 			new BoxSide(this, "front"),
-			new BoxSide(this, "back")
+			new BoxSide(this, "left"),
+			new BoxSide(this, "back"),
+			new BoxSide(this, "top"),
+			new BoxSide(this, "bottom")
 	};
 
 	public BoxActor(Scene scene, float x, float y, float z) {

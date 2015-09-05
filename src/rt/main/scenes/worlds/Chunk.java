@@ -172,6 +172,7 @@ public class Chunk extends Actor {
 		}
 		
 		
+		
 		this.loaded = true;
 	}
 	
@@ -193,7 +194,13 @@ public class Chunk extends Actor {
 		for(int xx = 0; xx < WIDTH; xx++){
 			for(int yy = 0; yy < HEIGHT; yy++){
 				for(int zz = 0; zz < WIDTH; zz++){
-					blocks[xx][yy][zz].tickle();
+					blocks[Smart.mod(xx-1, Chunk.WIDTH)][yy][zz].tickle();
+					blocks[Smart.mod(xx+1, Chunk.WIDTH)][yy][zz].tickle();
+					blocks[xx][Smart.mod(yy-1, Chunk.HEIGHT)][zz].tickle();
+					blocks[xx][Smart.mod(yy+1, Chunk.HEIGHT)][zz].tickle();
+					blocks[xx][yy][Smart.mod(zz-1, Chunk.WIDTH)].tickle();
+					blocks[xx][yy][Smart.mod(zz+1, Chunk.WIDTH)].tickle();
+					System.out.println("tickled");
 				}
 			}
 		}
@@ -286,6 +293,7 @@ public class Chunk extends Actor {
 				
 			}
 		}
+		
 		
 		this.loaded = true;
 	}

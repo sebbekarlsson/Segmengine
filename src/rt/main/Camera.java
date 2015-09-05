@@ -173,9 +173,8 @@ public class Camera extends Actor {
 
 				if(block.ray.getChunk().getBlock(Smart.mod(placex, Chunk.WIDTH), Smart.mod(placey, Chunk.HEIGHT), Smart.mod(placez, Chunk.WIDTH)).getType().equals(BlockType.AIR)){
 					block.ray.getChunk().setBlock(Smart.mod(placex, Chunk.WIDTH), Smart.mod(placey, Chunk.HEIGHT), Smart.mod(placez, Chunk.WIDTH), BlockType.COBBLE);
+					
 				}
-
-
 
 				}
 			}

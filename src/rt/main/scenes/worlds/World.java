@@ -25,10 +25,6 @@ public class World extends Scene {
 		generateChunks();
 		if(worldgenerator.generate()){System.out.println("Done!");}
 
-
-		//chunkHandler = new ChunkHandler(chunks);
-		//chunkHandler.start();
-
 		player = new Player(this, 4, 24, 4);
 		stageActor(player);
 
@@ -37,12 +33,6 @@ public class World extends Scene {
 
 	@Override
 	public void tick(int delta) {
-
-		//updateBlocks(delta);
-		/*Block block = getCamera().getFacingBlock();
-		if(block != null){
-			block.getHitbox().setDraw(true);
-		}*/
 
 		getCamera().x = getPlayer().x;
 		getCamera().y = getPlayer().y+(Block.SIZE * 2) - 0.25f;

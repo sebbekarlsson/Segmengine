@@ -33,8 +33,6 @@ public class Block extends BoxActor {
 		}else{ 
 			draw = false;
 		}
-
-		tickle();
 	}
 
 	@Override
@@ -89,32 +87,32 @@ public class Block extends BoxActor {
 				Block block_top = chunk.getBlock((int)(x/SIZE)%16, Math.min(Chunk.HEIGHT, (int)((y+Block.SIZE)%(mod)) / mod_div), (int)(z/SIZE)%16);
 				if(block_top.isSolid()){
 					if(!(block_top.isTransparent()))
-						this.sides[2].draw = false;
+						this.getSide("top").draw = false;
 				}
 				Block block_bottom = chunk.getBlock((int)(x/SIZE)%16, Math.max(0, (int)((y-Block.SIZE)%(mod)) / mod_div), (int)(z/SIZE)%16);
 				if(block_bottom.isSolid()){
 					if(!(block_bottom.isTransparent()))
-						this.sides[3].draw = false;
+						this.getSide("bottom").draw = false;
 				}
 				Block block_left = chunk.getBlock(Math.max(0, (int)((x-Block.SIZE)/SIZE)%16), (int)((y)%(mod)) / mod_div, (int)(z/SIZE)%16);
 				if(block_left.isSolid()){
 					if(!(block_left.isTransparent()))
-						this.sides[0].draw = false;
+						this.getSide("left").draw = false;
 				}
 				Block block_right = chunk.getBlock(Math.min(16, (int)((x+Block.SIZE)/SIZE)%16), (int)((y)%(mod)) / mod_div, (int)(z/SIZE)%16);
 				if(block_right.isSolid()){
 					if(!(block_right.isTransparent()))
-						this.sides[1].draw = false;
+						this.getSide("right").draw = false;
 				}
 				Block block_front = chunk.getBlock((int)(x/SIZE)%16, (int)((y)%(mod)) / mod_div, Math.min(16, (int)((z+Block.SIZE)/SIZE)%16));
 				if(block_front.isSolid()){
 					if(!(block_front.isTransparent()))
-						this.sides[4].draw = false;
+						this.getSide("front").draw = false;
 				}
 				Block block_back = chunk.getBlock((int)(x/SIZE)%16, (int)((y)%(mod)) / mod_div, Math.max(0, (int)((z-Block.SIZE)/SIZE)%16));
 				if(block_back.isSolid()){
 					if(!(block_back.isTransparent()))
-						this.sides[5].draw = false;
+						this.getSide("back").draw = false;
 				}
 			}
 		}

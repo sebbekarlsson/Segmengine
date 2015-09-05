@@ -34,6 +34,7 @@ public class BoxSide{
 			//back
 			if(type.equals("back")){
 				GL11.glPushMatrix();
+			    GL11.glCullFace(GL11.GL_BACK);
 				if(texture != null){
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 					texture.bind();
@@ -63,6 +64,7 @@ public class BoxSide{
 			//front
 			if(type.equals("front")){
 				GL11.glPushMatrix();
+				GL11.glCullFace(GL11.GL_FRONT);
 				if(texture != null){
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 					texture.bind();
@@ -93,6 +95,7 @@ public class BoxSide{
 			//left
 			if(type.equals("left")){
 				GL11.glPushMatrix();
+				GL11.glCullFace(GL11.GL_LEFT);
 				if(texture != null){
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 					texture.bind();
@@ -120,6 +123,7 @@ public class BoxSide{
 			//right
 			if(type.equals("right")){
 				GL11.glPushMatrix();
+				GL11.glCullFace(GL11.GL_RIGHT);
 				if(texture != null){
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 					texture.bind();
@@ -148,6 +152,7 @@ public class BoxSide{
 			//bottom
 			if(type.equals("bottom")){
 				GL11.glPushMatrix();
+				//GL11.glCullFace(GL11.GL_BOTTOM);
 				if(texture != null){
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 					texture.bind();
@@ -177,6 +182,7 @@ public class BoxSide{
 			//top
 			if(type.equals("top")){
 				GL11.glPushMatrix();
+				//GL11.glCullFace(GL11.GL_);
 				if(texture != null){
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 					texture.bind();

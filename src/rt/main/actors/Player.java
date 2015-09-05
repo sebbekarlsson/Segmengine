@@ -32,7 +32,7 @@ public class Player extends Entity {
 		while(Keyboard.next()){
 			if (Keyboard.getEventKeyState()){
 				if(Keyboard.getEventKey() == Keyboard.KEY_LCONTROL){
-				 getChunk().setBlock(Smart.mod(x, Chunk.WIDTH), Smart.mod(y, Chunk.HEIGHT), Smart.mod(z, Chunk.WIDTH), BlockType.getRandom());
+					getChunk().setBlock(Smart.mod(x, Chunk.WIDTH), Smart.mod(y, Chunk.HEIGHT), Smart.mod(z, Chunk.WIDTH), BlockType.getRandom());
 				}
 				if(Keyboard.getEventKey() == Keyboard.KEY_R){
 					y = 120;
