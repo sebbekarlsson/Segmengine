@@ -30,7 +30,7 @@ public abstract class Scene {
 	/**
 	 * Used to update the current state of the scene.
 	 * 
-	 * @param delta
+	 * @param delta an Integer (the current delta-time) .
 	 */
 	public void update(int delta){
 		/*
@@ -60,14 +60,14 @@ public abstract class Scene {
 	/**
 	 * Used to update the scene's logic.
 	 * 
-	 * @param delta
+	 * @param delta an Integer (the current delta-time) .
 	 */
 	public abstract void tick(int delta);
 	
 	/**
 	 * Used to draw the scene's graphics.
 	 * 
-	 * @param delta
+	 * @param delta an Integer (the current delta-time) .
 	 */
 	public abstract void draw(int delta);
 
@@ -82,7 +82,7 @@ public abstract class Scene {
 	/**
 	 * Adds an actor to our actor-buffer.
 	 * 
-	 * @param actor
+	 * @param actor the selected actor to add.
 	 */
 	public void stageActor(Actor actor){
 		actors.add(actor);
@@ -100,7 +100,7 @@ public abstract class Scene {
 	/**
 	 * Removes an actor from the scene's actor-buffer where the index = index.
 	 * 
-	 * @param index
+	 * @param index a value that represents the actor-index
 	 */
 	public void removeActor(int index){
 		actors.remove(index);
