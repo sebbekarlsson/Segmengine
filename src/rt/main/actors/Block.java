@@ -9,9 +9,21 @@ import rt.main.types.BlockType;
 import rt.main.utils.Smart;
 
 public class Block extends BoxActor {
-
+	
+	/*
+	 * Variable that holds the type of the block. For example BlockType.COBBLE
+	 */
 	private BlockType blocktype;
+	
+	/*
+	 * This is probably not a solution, let's not talk about that.
+	 */
 	public Ray ray;
+	
+	/*
+	 * Setting the size in units of the block.
+	 * This should probably be hard-coded...
+	 */
 	public static int SIZE = 1;
 
 	public Block(Scene scene, float x, float y, float z, BlockType blocktype) {
@@ -46,10 +58,21 @@ public class Block extends BoxActor {
 
 	}
 
+	/**
+	 * 
+	 * @return the type of the block. (BlockType enumeration)
+	 */
 	public BlockType getType(){
 		return this.blocktype;
 	}
 
+	/**
+	 * Used to set the BlockType enumeration for the block.
+	 * This function also updates the size, texture and transparency in case of a change.
+	 * 
+	 * @param blocktype
+	 * @return this block.
+	 */
 	public Block setType(BlockType blocktype){
 		this.blocktype = blocktype;
 		this.setSize(SIZE, SIZE, SIZE);
@@ -68,6 +91,13 @@ public class Block extends BoxActor {
 		return this;
 	}
 
+	/**
+	 * This function's purpose is to prevent drawing of sides that are blocked by another block.
+	 * This function will also do a lot of other stuff that we DONT'T want to happen every frame.
+	 * This is an update that only happens under certain circumstances.
+	 * 
+	 * @return this block.
+	 */
 	public Block tickle(){
 
 		for(int i = 0; i < this.sides.length; i++){
@@ -120,18 +150,37 @@ public class Block extends BoxActor {
 		return this;
 
 	}
-
+	
+	/**
+	 * This function is used to set the size in units for the block.
+	 * 
+	 * @deprecated this function is deprecated since block-sizes will be hard-coded in the future.
+	 * @param size
+	 * @return this block.
+	 */
 	public Block setSize(int size){
 		SIZE = size;
 		this.setType(this.blocktype);
 
 		return this;
 	}
-
+	
+	/**
+	 * This function is used to get the size in units of the block.
+	 * 
+	 * @deprecated this function is deprecated since block-sizes will be hard-coded in the future.
+	 * @return the size in units of the block.
+	 */
 	public float getSize(){
 		return SIZE;
 	}
-
+	
+	/**
+	 * This function is used to check if a block intersects with an array.
+	 * 
+	 * @param ray
+	 * @return a boolean value if ray exists, else it will return null.
+	 */
 	public Block intersectsWithRay(Ray ray){
 		if(ray.x >= this.x-(SIZE/2) && ray.x <= this.x+(SIZE*2) && ray.z >= this.z-(SIZE/2) && ray.z <= this.z+(SIZE*2) && ray.y >= this.y-(SIZE/2) && ray.y <= this.y+(SIZE*2)){
 			this.ray = ray;

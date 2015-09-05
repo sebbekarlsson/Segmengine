@@ -21,6 +21,12 @@ public class TextureBank {
 	public static Texture LEAF = loadTexture("res/test/leaf.png", "png");
 	public static Texture SAND = loadTexture("res/test/san.png", "png");
 	
+	/**
+	 * 
+	 * @param path
+	 * @param format
+	 * @return a texture specified from a folder and a format
+	 */
 	public static Texture loadTexture(String path, String format){
 		Texture t = null;
 		try {
