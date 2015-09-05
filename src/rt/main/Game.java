@@ -15,77 +15,138 @@ import rt.main.scenes.worlds.World;
 
 public class Game {
 	
+	/*
+ 	* Setting up the size & dimension for our display.
+ 	*/
 	public static int WIDTH = 640;
 	public static int HEIGHT = WIDTH / 16 * 9;
 	public static int SCALE = 2;
 	public static Dimension DISPLAY_SIZE = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
+	
+	/*
+	 * Setting up our scene-buffer and initializing a scene-index that will be used as a pointer.
+	 */
 	private static ArrayList<Scene> SCENES = new ArrayList<Scene>();
 	private static int SCENEINDEX = 0;
-	/** time at last frame */
+	
+	/*
+	 * Initializing some variables for timing.
+	 */
     long lastFrame;
-     
-    /** frames per second */
     int fps;
-    /** last fps time */
     long lastFPS;
 	
+    /*
+     * Our open point for the program, creating a new instance of itself. (A game object).
+     */
 	public static void main(String[] args) throws LWJGLException{
 		new Game();
 	}
 	
 	public Game() throws LWJGLException{
+		
+		/*
+		 * Creating our display.
+		 */
 		Display.setTitle("RoofTop Game");
 		setDisplayMode(DISPLAY_SIZE.width/2, DISPLAY_SIZE.height/2, true);
 		Display.create();
 		
+		/*
+		 * Adding scenes to our game.
+		 */
 		setScenes(new Scene[]{
 				new World()
 		});
 		
+		/*
+		 * Getting the delta & last-FPS values.
+		 */
 		getDelta();
 		lastFPS = getTime();
+		
+		/*
+		 * The GameLoop, here we draw & update scenes, actors and others.
+		 */
 		while(!Display.isCloseRequested()){
+			/*
+			 * Calculating our delta-time.
+			 */
 			int delta = getDelta();
+			
+			/*
+			 * Fetching some objects from the current scene and the scene.
+			 */
 			Scene scene = getCurrentScene();
 			Camera camera = scene.getCamera();
 	        
+			/*
+			 * Updates our graphics, initializing 3D rendering. (This should probably be in the Camera class later.
+			 */
 			make3D();
 			
+			/*
+			 * Clearing our graphics-buffer and replacing it with white color.
+			 */
 			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT);
 			GL11.glClearColor((float)scene.backgroundColor.getRed()/255, (float)scene.backgroundColor.getGreen()/255, (float)scene.backgroundColor.getBlue()/255, 1f);
 			GL11.glColor3f(1f, 1f, 1f);
 			
-			
+			/*
+			 * Initializing the current scene if it hasn't already been initialized.
+			 */
 			if(!scene.isInitialized()){
 				scene.initialize();
 			}
 			
-			
+			/*
+			 * Pushing our graphics matrix.
+			 */
 			GL11.glPushMatrix();
 			
+			/*
+			 * Rotating and translating our matrix with the current scene's camera.
+			 */
 			GL11.glRotatef(camera.xrot, 1, 0, 0);
 			GL11.glRotatef(camera.yrot, 0, 1, 0);
 			GL11.glTranslatef(-camera.x, -camera.y, -camera.z);
 			
+			/*
+			 * Updating the current scene along with it's camera.
+			 */
 			camera.update(delta);
 			scene.update(delta);
 			
+			/*
+			 * Finally, we're popping our matrix.
+			 */
 			GL11.glPopMatrix();
 			
 			
+			/*
+			 * Making our display sync to 60FPS and then we're updating our display.
+			 */
 			Display.sync(60);
 			Display.update();
 			
+			/*
+			 * Making it possible to terminate the program with the ESCAPE key.
+			 */
 			if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
 				System.exit(0);
 			}
 		}
 		
+		/*
+		 * Terminating our program if it runs out of the GameLoop. (Could be caused by a close-request)
+		 */
 		System.exit(0);
 	}
 	
+	/**
+	 * Set our view to 2D.
+	 */
 	protected static void make2D() {
-        //Remove the Z axis
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -97,8 +158,10 @@ public class Game {
         GL11.glLoadIdentity();
     }
  
+	/**
+	 * Set our view to 3D.
+	 */
     protected static void make3D() {
-        //Restore the Z axis
     	GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
         GLU.gluPerspective(92f, (float)Display.getWidth()/Display.getHeight(), 0.1f, 1000);
@@ -118,8 +181,7 @@ public class Game {
 	 * @param fullscreen True if we want fullscreen mode
 	 */
 	private void setDisplayMode(int width, int height, boolean fullscreen) {
-	 
-	    // return if requested DisplayMode is already set
+		
 	    if ((Display.getDisplayMode().getWidth() == width) && 
 	        (Display.getDisplayMode().getHeight() == height) && 
 	    (Display.isFullscreen() == fullscreen)) {
@@ -143,10 +205,6 @@ public class Game {
 	                freq = targetDisplayMode.getFrequency();
 	                        }
 	                    }
-	 
-	            // if we've found a match for bpp and frequence against the 
-	            // original display mode then it's probably best to go for this one
-	            // since it's most likely compatible with the monitor
 	            if ((current.getBitsPerPixel() == Display.getDesktopDisplayMode().getBitsPerPixel()) &&
 	                        (current.getFrequency() == Display.getDesktopDisplayMode().getFrequency())) {
 	                            targetDisplayMode = current;
@@ -171,10 +229,19 @@ public class Game {
 	    }
 	}
 	
+	/**
+	 * Used to get all of the scenes in a list.
+	 *
+	 * @Return ArrayList<Scene>
+	 */
 	public ArrayList<Scene> getScenes(){
 		return SCENES;
 	}
 	
+	/**
+	 * Used to set which scenes to use.
+	 * 
+	 */
 	public void setScenes(Scene[] scenes){
 		ArrayList<Scene> s = new ArrayList<Scene>();
 		for(Scene scene : scenes){
@@ -184,14 +251,28 @@ public class Game {
 		SCENES = s;
 	}
 	
+	/**
+	 * Used to get the current scene that our pointer is pointing at.
+	 * 
+	 * @Return (Object) Scene
+	 */
 	public static Scene getCurrentScene(){
 		return SCENES.get(SCENEINDEX);
 	}
 	
+	/**
+	 * Used to get the value of our scene-pointer.
+	 * 
+	 * @Return (Int)
+	 */
 	public int getSceneIndex(){
 		return SCENEINDEX;
 	}
 	
+	/**
+	 * Used to set our pointer to a certain index.
+	 * 
+	 */
 	public void setSceneIndex(int index){
 		SCENEINDEX = index;
 	}
@@ -205,6 +286,11 @@ public class Game {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
 	}
 	
+	/**
+	 * Used to get the delta-time.
+	 * 
+	 * @Return (Int)
+	 */
 	public int getDelta() {
 	    long time = getTime();
 	    int delta = (int) (time - lastFrame);
