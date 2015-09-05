@@ -97,7 +97,7 @@ public class Camera extends Actor {
 	/**
 	 * Used to set the keyboardControlled variable to either true or false.
 	 * 
-	 * @param mouseControlled a boolean value.
+	 * @param keyboardControlled a boolean value.
 	 */
 	public void setKeyboardControlled(boolean keyboardControlled){
 		this.keyboardControlled = keyboardControlled;
