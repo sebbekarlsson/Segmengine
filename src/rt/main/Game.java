@@ -13,6 +13,17 @@ import org.lwjgl.util.glu.GLU;
 
 import rt.main.scenes.worlds.World;
 
+/**
+* <h1>Segmentengine</h1>
+* <p>
+* The Segmentengine is a game engine.
+* Segmentengine's main purpose is to help people create block-based (voxel) games.
+* </p>
+*
+* @author  Sebastian Robert Karlsson
+* @version 1.0
+* @since   2015-09-15 
+*/
 public class Game {
 	
 	/*
@@ -232,7 +243,7 @@ public class Game {
 	/**
 	 * Used to get all of the scenes in a list.
 	 *
-	 * @Return ArrayList<Scene>
+	 * @return an Arraylist of scenes.
 	 */
 	public ArrayList<Scene> getScenes(){
 		return SCENES;
@@ -241,6 +252,7 @@ public class Game {
 	/**
 	 * Used to set which scenes to use.
 	 * 
+	 * @param scenes an array of scenes.
 	 */
 	public void setScenes(Scene[] scenes){
 		ArrayList<Scene> s = new ArrayList<Scene>();
@@ -254,7 +266,7 @@ public class Game {
 	/**
 	 * Used to get the current scene that our pointer is pointing at.
 	 * 
-	 * @Return (Object) Scene
+	 * @return the current scene.
 	 */
 	public static Scene getCurrentScene(){
 		return SCENES.get(SCENEINDEX);
@@ -263,7 +275,7 @@ public class Game {
 	/**
 	 * Used to get the value of our scene-pointer.
 	 * 
-	 * @Return (Int)
+	 * @return an Integer of the current SCENEINDEX.
 	 */
 	public int getSceneIndex(){
 		return SCENEINDEX;
@@ -272,6 +284,7 @@ public class Game {
 	/**
 	 * Used to set our pointer to a certain index.
 	 * 
+	 * @param index an Integer.
 	 */
 	public void setSceneIndex(int index){
 		SCENEINDEX = index;
@@ -280,7 +293,7 @@ public class Game {
 	/**
 	 * Get the time in milliseconds
 	 * 
-	 * @return The system time in milliseconds
+	 * @return The system time in milliseconds.
 	 */
 	public static long getTime() {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
@@ -289,7 +302,7 @@ public class Game {
 	/**
 	 * Used to get the delta-time.
 	 * 
-	 * @Return (Int)
+	 * @return delta-time (Integer)
 	 */
 	public int getDelta() {
 	    long time = getTime();

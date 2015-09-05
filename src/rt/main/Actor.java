@@ -32,7 +32,7 @@ public abstract class Actor {
 	/**
 	 * Updates our actor and passes through with the current delta-time.
 	 * 
-	 * @param delta
+	 * @param delta an Integer
 	 */
 	public void update(int delta){
 		
@@ -53,14 +53,14 @@ public abstract class Actor {
 	/**
 	 * Updates the actor logic.
 	 * 
-	 * @param delta
+	 * @param delta an Integer
 	 */
 	public abstract void tick(int delta);
 	
 	/**
 	 * Updates the actor graphics.
 	 * 
-	 * @param delta
+	 * @param delta an Integer
 	 */
 	public abstract void draw(int delta);
 	
@@ -68,10 +68,10 @@ public abstract class Actor {
 	 * This is not being used at all but was once used for collision checking.
 	 * This is deprecated and will be removed in a future version.
 	 * 
-	 * @param actor
-	 * @param timex
-	 * @param timey
-	 * @param timez
+	 * @param actor an actor object
+	 * @param timex a float value
+	 * @param timey a float value
+	 * @param timez a float value
 	 */
 	public abstract void preparedCollision(Actor actor, float timex, float timey, float timez);
 	
@@ -104,7 +104,7 @@ public abstract class Actor {
 	/**
 	 * Sets the actor's hitbox.
 	 * 
-	 * @param (Hitbox) hitbox
+	 * @param hitbox a hitbox object
 	 */
 	public void setHitbox(Hitbox hitbox){
 		this.hitbox = hitbox;
@@ -113,7 +113,7 @@ public abstract class Actor {
 	/**
 	 * Checks if the actor is a solid object.
 	 * 
-	 * @return boolean
+	 * @return Boolean
 	 */
 	public boolean isSolid(){
 		return this.solid;
@@ -122,7 +122,7 @@ public abstract class Actor {
 	/**
 	 * Sets the actor's solid variable to a selected boolean.
 	 * 
-	 * @param boolean
+	 * @param solid a boolean value
 	 */
 	public void setSolid(boolean solid){
 		this.solid = solid;
@@ -131,7 +131,7 @@ public abstract class Actor {
 	/**
 	 * Checks if actor is transparent. (Mostly texture-wise, could still be solid and transparent at the same time)
 	 * 
-	 * @return boolean
+	 * @return Boolean
 	 */
 	public boolean isTransparent(){
 		return this.transparent;
@@ -140,7 +140,7 @@ public abstract class Actor {
 	/**
 	 * Sets the actor's transparent variable to a selected boolean.
 	 * 
-	 * @param boolean
+	 * @param transparent a boolean value
 	 */
 	public void setTransparent(boolean transparent){
 		this.transparent = transparent;
@@ -186,8 +186,8 @@ public abstract class Actor {
 	/**
 	 * Used to get the visible chunks from the actor depending on a radius variable.
 	 * 
-	 * @param radius
-	 * @return Arraylist<Chunk>
+	 * @param radius the radius of the view
+	 * @return an arraylist with chunks
 	 */
 	public ArrayList<Chunk> getVisibleChunks(int radius){
 
