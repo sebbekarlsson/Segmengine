@@ -88,7 +88,7 @@ public class Camera extends Actor {
 	/**
 	 * Used to set the mouseControlled variable to either true or false.
 	 * 
-	 * @param mouseControlled
+	 * @param mouseControlled a boolean value.
 	 */
 	public void setMouseControlled(boolean mouseControlled){
 		this.mouseControlled = mouseControlled;
@@ -97,7 +97,7 @@ public class Camera extends Actor {
 	/**
 	 * Used to set the keyboardControlled variable to either true or false.
 	 * 
-	 * @param mouseControlled
+	 * @param mouseControlled a boolean value.
 	 */
 	public void setKeyboardControlled(boolean keyboardControlled){
 		this.keyboardControlled = keyboardControlled;
@@ -195,7 +195,7 @@ public class Camera extends Actor {
 	/**
 	 * This function is used to "place" a block wherever the camera is looking. (it actually set's the type of the facing block)
 	 * 
-	 * @param type
+	 * @param type an enum var from the enumtype blocktype.
 	 */
 	public void placeBlock(BlockType type){
 		Block block = getFacingBlock();
