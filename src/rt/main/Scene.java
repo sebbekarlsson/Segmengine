@@ -91,7 +91,7 @@ public abstract class Scene {
 	/**
 	 * Removes an actor from the scene's actor-buffer.
 	 * 
-	 * @param actor
+	 * @param actor the selected actor to remove.
 	 */
 	public void removeActor(Actor actor){
 		actors.remove(actor);
