@@ -13,9 +13,16 @@ import rt.main.types.BlockType;
 import rt.main.utils.Smart;
 
 public class Camera extends Actor {
-
+	
+	/*
+	 * We would like to know if the camera should be user-controlled in any way.
+	 */
 	private boolean mouseControlled = false;
 	private boolean keyboardControlled = false;
+	
+	/*
+	 * Creating a frustrum object used for performance later.
+	 */
 	public Frustum frustum;
 
 	public Camera(Scene scene, float x, float y, float z) {
@@ -31,12 +38,20 @@ public class Camera extends Actor {
 
 
 	public void update(int delta){
+		
+		/*
+		 * Updating our Frustrum object.
+		 */
 		frustum = Frustum.getFrustum();
+		
 		tick(delta);
 		draw(delta);
 
+		/*
+		 * Testing if the camera can be user-controlled in any way.
+		 */
 		if(isKeyboardControlled()){
-			slaveForKeyboard();
+			slaveForKeyboard(delta);
 		}
 		if(isMouseControlled()){
 			slaveForMouse(delta);
@@ -51,41 +66,75 @@ public class Camera extends Actor {
 
 	@Override
 	public void tick(int delta) {
-		/*Block facing_block = getFacingBlock();
-		if(facing_block != null)
-		facing_block.getHitbox().setDraw(true);*/
+		
 	}
-
+	
+	/**
+	 * 
+	 * @return the camera's rotation around the y-axis.
+	 */
 	public float getYaw(){
 		return this.yrot;
 	}
 
+	/**
+	 * 
+	 * @return the camera's rotation around the x-axis.
+	 */
 	public float getPitch(){
 		return this.xrot;
 	}
 
+	/**
+	 * Used to set the mouseControlled variable to either true or false.
+	 * 
+	 * @param mouseControlled
+	 */
 	public void setMouseControlled(boolean mouseControlled){
 		this.mouseControlled = mouseControlled;
 	}
 
+	/**
+	 * Used to set the keyboardControlled variable to either true or false.
+	 * 
+	 * @param mouseControlled
+	 */
 	public void setKeyboardControlled(boolean keyboardControlled){
 		this.keyboardControlled = keyboardControlled;
 	}
 
+	/**
+	 * 
+	 * @return true if the camera is mouse-controlled an false if it isn't.
+	 */
 	public boolean isMouseControlled(){
 		return this.mouseControlled;
 	}
 
+	/**
+	 * 
+	 * @return true if the camera is keyboard-controlled an false if it isn't.
+	 */
 	public boolean isKeyboardControlled(){
 		return this.keyboardControlled;
 	}
 
+	/**
+	 * This function is called to make the camera "slave" for the mouse. (rotate in the angle the mouse is moved in)
+	 * 
+	 * @param delta
+	 */
 	private void slaveForMouse(int delta){
 		this.xrot -= Mouse.getDY();
 		this.yrot += Mouse.getDX();
 	}
-
-	private void slaveForKeyboard(){
+	
+	/**
+	 * This function is used to make the camera "slave" for the keyboard...
+	 * 
+	 * @param delta
+	 */
+	private void slaveForKeyboard(int delta){
 		if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
 			x -= 1f * (float) Math.sin(Math.toRadians(getYaw()));
 			z += 1f * (float) Math.cos(Math.toRadians(getYaw()));
@@ -106,10 +155,14 @@ public class Camera extends Actor {
 
 	@Override
 	public void preparedCollision(Actor actor, float timex, float timey, float timez) {
-		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * This function is used to obtain the block that the camera is currently "looking" at.
+	 * 
+	 * @return the block that the camera is facing.
+	 */
 	public Block getFacingBlock(){
 		Ray ray = new Ray(this.scene, x, y, z);
 		
@@ -138,7 +191,12 @@ public class Camera extends Actor {
 
 		return null;
 	}
-
+	
+	/**
+	 * This function is used to "place" a block wherever the camera is looking. (it actually set's the type of the facing block)
+	 * 
+	 * @param type
+	 */
 	public void placeBlock(BlockType type){
 		Block block = getFacingBlock();
 		if(block != null){
